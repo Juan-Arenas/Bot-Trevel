@@ -98,3 +98,16 @@ client.on("messageCreate", async (message) => {
 // 🔑 LOGIN DEL BOT
 // =============================
 client.login(process.env.TOKEN);
+
+import express from "express";
+
+const app = express();
+
+app.get("/", (req, res) => {
+  res.send("💜 TrevelBot activo y on fire 💜");
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🌐 Webserver escuchando en puerto ${PORT}`);
+});

@@ -7,4 +7,4 @@ services:
     startCommand: node index.js
     envVars:
       - key: TOKEN
-        value: MTQxODc5NjE0ODkxODk4MDY4OA.G2DjOV.6rezAQlvEJYFsx9XkVFjraorRscbNWbAIJDjLQ
+        fromDatabase: true   # Esto indica que Render usará la variable que configures en su panel
