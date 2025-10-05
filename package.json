@@ -1,17 +1,16 @@
 {
-  "dependencies": {
-    "discord.js": "^14.22.1",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0"
-  },
-  "name": "discordbot",
+  "name": "trevel-roleplay-bot",
   "version": "1.0.0",
-  "description": "",
+  "description": "Bot oficial de Trevel Roleplay 💜",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "Juan Arenas",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^15.8.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
+  }
 }
