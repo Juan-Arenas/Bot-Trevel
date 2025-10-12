@@ -13,7 +13,9 @@ import {
   ChannelType,
   ModalBuilder,
   TextInputBuilder,
-  TextInputStyle
+  TextInputStyle,
+  StringSelectMenuBuilder, // 🟢 IMPORTADO: Menú Desplegable
+  StringSelectMenuOptionBuilder // 🟢 IMPORTADO: Opciones del Menú
 } from "discord.js";
 import dotenv from "dotenv";
 dotenv.config();
@@ -334,149 +336,154 @@ client.once("ready", async () => {
 });
 
 // =============================
-// 🛑 LÓGICA DE INTERACCIÓN DE BOTONES Y MODALS (TICKETS) 🛑
+// 🛑 LÓGICA DE INTERACCIÓN DE BOTONES, MODALS Y MENÚS (TICKETS) 🛑
 // =============================
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.guild) return;
     
-    // --- 1. Manejo de Botones de Creación de Ticket ---
-    if (interaction.isButton()) {
-        const ticketOption = TICKET_OPTIONS.find(opt => opt.id === interaction.customId);
+    // --- 1. Manejo del Menú Desplegable de Creación de Ticket ---
+    if (interaction.isStringSelectMenu() && interaction.customId === 'TICKET_SELECT_MENU') {
+        
+        // El menú desplegable devuelve un array con el valor seleccionado (el ID del ticket)
+        const selectedOptionId = interaction.values[0]; 
+        const ticketOption = TICKET_OPTIONS.find(opt => opt.id === selectedOptionId);
 
-        if (ticketOption) {
-            
-            const ticketKey = interaction.user.id + ":" + ticketOption.id;
-            const existingTicket = openTickets.get(ticketKey);
-            
-            if (existingTicket) {
-                return interaction.reply({ 
-                    content: `❌ Ya tienes un ticket **${ticketOption.label}** abierto: <#${existingTicket.id}>. Cierra el anterior para abrir uno nuevo.`, 
-                    ephemeral: true 
-                });
-            }
-
-            await interaction.deferReply({ ephemeral: true }); 
-
-            try {
-                const guildTickets = interaction.guild.channels.cache.filter(c => c.parentId === CATEGORIA_TICKETS);
-                const ticketNumber = String(guildTickets.size + 1).padStart(4, '0'); 
-                
-                const channelName = `${ticketOption.emoji}-${ticketOption.id.split('_').slice(1).join('-')}-${ticketNumber}`; 
-
-                const staffOverwrites = ticketOption.staffRoleIds.map(roleId => ({
-                    id: roleId,
-                    allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
-                }));
-                
-                const ticketChannel = await interaction.guild.channels.create({
-                    name: channelName,
-                    type: ChannelType.GuildText,
-                    parent: CATEGORIA_TICKETS,
-                    topic: `Creador:${interaction.user.id}|Tipo:${ticketOption.id}`, 
-                    permissionOverwrites: [
-                        {
-                            id: interaction.guild.id, // @everyone
-                            deny: [PermissionsBitField.Flags.ViewChannel],
-                        },
-                        {
-                            id: interaction.user.id, // Creador
-                            allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
-                        },
-                        ...staffOverwrites,
-                    ],
-                });
-                
-                openTickets.set(ticketKey, ticketChannel);
-
-                const closeButtonRow = new ActionRowBuilder()
-                    .addComponents(
-                        new ButtonBuilder()
-                            .setCustomId('TICKET_CLOSE')
-                            .setLabel('🔒 Cerrar y Archivar Ticket')
-                            .setStyle(ButtonStyle.Secondary)
-                            .setEmoji('🔒'),
-                    );
-
-                const welcomeEmbed = new EmbedBuilder()
-                    .setColor(ticketOption.color)
-                    .setTitle(ticketOption.title)
-                    .setDescription(`**¡Bienvenido <@${interaction.user.id}>!**\n\n${ticketOption.description}\n\n**Por favor, describe tu problema a continuación y espera al Staff.**`)
-                    .addFields(
-                        { name: "👤 Creador", value: `<@${interaction.user.id}>`, inline: true },
-                        { name: "✨ Tipo", value: ticketOption.label, inline: true }
-                    )
-                    .setFooter({ text: `Ticket #${ticketNumber} | Trevel RP` })
-                    .setTimestamp();
-                
-                const staffMentions = ticketOption.staffMentions.join(' ');
-
-                await ticketChannel.send({ 
-                    content: `${staffMentions} ¡Nuevo ticket! ${interaction.user} te espera.`,
-                    embeds: [welcomeEmbed],
-                    components: [closeButtonRow]
-                });
-                
-                // 💥 NUEVO: Enviar formato de ticket si existe
-                if (TICKET_FORMATS[ticketOption.id]) {
-                    // Usamos un pequeño delay para que el mensaje del formato no se mezcle con el embed de bienvenida
-                    setTimeout(async () => {
-                         await ticketChannel.send(TICKET_FORMATS[ticketOption.id]);
-                    }, 1000);
-                }
-
-
-                await interaction.editReply({ 
-                    content: `✅ Tu ticket **${ticketOption.label}** ha sido creado: ${ticketChannel}`,
-                    ephemeral: true 
-                });
-
-            } catch (error) {
-                console.error("Error al crear el ticket:", error);
-                await interaction.editReply({ 
-                    content: "❌ Hubo un error al crear tu ticket. Verifica que la categoría y los IDs de Staff sean válidos (solo números), o que el bot tenga el permiso 'Gestionar Canales'.",
-                    ephemeral: true 
-                });
-            }
-            return;
+        if (!ticketOption) {
+            return interaction.reply({ content: "❌ Opción de ticket no encontrada.", ephemeral: true });
+        }
+        
+        const ticketKey = interaction.user.id + ":" + ticketOption.id;
+        const existingTicket = openTickets.get(ticketKey);
+        
+        // Verifica si ya tiene un ticket del mismo tipo abierto
+        if (existingTicket) {
+            return interaction.reply({ 
+                content: `❌ Ya tienes un ticket **${ticketOption.label}** abierto: <#${existingTicket.id}>. Cierra el anterior para abrir uno nuevo.`, 
+                ephemeral: true 
+            });
         }
 
-        // --- 2. Manejo de Botón de Cierre de Ticket (Abrir Modal) ---
-        if (interaction.customId === 'TICKET_CLOSE') {
-            const ticketChannel = interaction.channel;
+        await interaction.deferReply({ ephemeral: true }); 
 
-            if (ticketChannel.parentId !== CATEGORIA_TICKETS) {
-                return interaction.reply({ content: "❌ Esto no parece ser un canal de ticket.", ephemeral: true });
+        try {
+            const guildTickets = interaction.guild.channels.cache.filter(c => c.parentId === CATEGORIA_TICKETS);
+            const ticketNumber = String(guildTickets.size + 1).padStart(4, '0'); 
+            
+            const channelName = `${ticketOption.emoji}-${ticketOption.id.split('_').slice(1).join('-')}-${ticketNumber}`; 
+
+            const staffOverwrites = ticketOption.staffRoleIds.map(roleId => ({
+                id: roleId,
+                allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
+            }));
+            
+            // Crea el canal de ticket
+            const ticketChannel = await interaction.guild.channels.create({
+                name: channelName,
+                type: ChannelType.GuildText,
+                parent: CATEGORIA_TICKETS,
+                topic: `Creador:${interaction.user.id}|Tipo:${ticketOption.id}`, 
+                permissionOverwrites: [
+                    {
+                        id: interaction.guild.id, // @everyone
+                        deny: [PermissionsBitField.Flags.ViewChannel],
+                    },
+                    {
+                        id: interaction.user.id, // Creador
+                        allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
+                    },
+                    ...staffOverwrites,
+                ],
+            });
+            
+            openTickets.set(ticketKey, ticketChannel);
+
+            const closeButtonRow = new ActionRowBuilder()
+                .addComponents(
+                    new ButtonBuilder()
+                        .setCustomId('TICKET_CLOSE')
+                        .setLabel('🔒 Cerrar y Archivar Ticket')
+                        .setStyle(ButtonStyle.Secondary)
+                        .setEmoji('🔒'),
+                );
+
+            const welcomeEmbed = new EmbedBuilder()
+                .setColor(ticketOption.color)
+                .setTitle(ticketOption.title)
+                .setDescription(`**¡Bienvenido <@${interaction.user.id}>!**\n\n${ticketOption.description}\n\n**Por favor, describe tu problema a continuación y espera al Staff.**`)
+                .addFields(
+                    { name: "👤 Creador", value: `<@${interaction.user.id}>`, inline: true },
+                    { name: "✨ Tipo", value: ticketOption.label, inline: true }
+                )
+                .setFooter({ text: `Ticket #${ticketNumber} | Trevel RP` })
+                .setTimestamp();
+            
+            const staffMentions = ticketOption.staffMentions.join(' ');
+
+            await ticketChannel.send({ 
+                content: `${staffMentions} ¡Nuevo ticket! ${interaction.user} te espera.`,
+                embeds: [welcomeEmbed],
+                components: [closeButtonRow]
+            });
+            
+            // Enviar formato de ticket si existe
+            if (TICKET_FORMATS[ticketOption.id]) {
+                setTimeout(async () => {
+                     await ticketChannel.send(TICKET_FORMATS[ticketOption.id]);
+                }, 1000);
             }
 
-            const isAdmin = interaction.member.permissions.has(PermissionsBitField.Flags.Administrator); 
-            const creatorIdMatch = ticketChannel.topic?.match(/Creador:(\d+)/);
-            const channelCreatorId = creatorIdMatch ? creatorIdMatch[1] : null;
 
-            if (!isAdmin && interaction.user.id !== channelCreatorId) {
-                return interaction.reply({ content: "❌ Solo el creador del ticket o un **Administrador** puede cerrarlo.", ephemeral: true });
-            }
+            await interaction.editReply({ 
+                content: `✅ Tu ticket **${ticketOption.label}** ha sido creado: ${ticketChannel}`,
+                ephemeral: true 
+            });
 
-            // Crear el Modal para pedir el motivo
-            const modal = new ModalBuilder()
-                .setCustomId('TICKET_CLOSE_MODAL')
-                .setTitle('🔒 Motivo de Cierre de Ticket');
-
-            const reasonInput = new TextInputBuilder()
-                .setCustomId('closeReason')
-                .setLabel("Motivo del Cierre")
-                .setStyle(TextInputStyle.Paragraph)
-                .setPlaceholder('Ej: Solucionado por Soporte Técnico. | Jugador no responde. | Reporte inválido.')
-                .setRequired(true)
-                .setMinLength(10)
-                .setMaxLength(500);
-
-            const firstActionRow = new ActionRowBuilder().addComponents(reasonInput);
-
-            modal.addComponents(firstActionRow);
-
-            await interaction.showModal(modal);
-            return;
+        } catch (error) {
+            console.error("Error al crear el ticket:", error);
+            await interaction.editReply({ 
+                content: "❌ Hubo un error al crear tu ticket. Verifica que la categoría y los IDs de Staff sean válidos (solo números), o que el bot tenga el permiso 'Gestionar Canales'.",
+                ephemeral: true 
+            });
         }
+        return;
+    }
+
+    // --- 2. Manejo de Botón de Cierre de Ticket (Abrir Modal) ---
+    if (interaction.isButton() && interaction.customId === 'TICKET_CLOSE') {
+        const ticketChannel = interaction.channel;
+
+        if (ticketChannel.parentId !== CATEGORIA_TICKETS) {
+            return interaction.reply({ content: "❌ Esto no parece ser un canal de ticket.", ephemeral: true });
+        }
+
+        const isAdmin = interaction.member.permissions.has(PermissionsBitField.Flags.Administrator); 
+        const creatorIdMatch = ticketChannel.topic?.match(/Creador:(\d+)/);
+        const channelCreatorId = creatorIdMatch ? creatorIdMatch[1] : null;
+
+        if (!isAdmin && interaction.user.id !== channelCreatorId) {
+            return interaction.reply({ content: "❌ Solo el creador del ticket o un **Administrador** puede cerrarlo.", ephemeral: true });
+        }
+
+        // Crear el Modal para pedir el motivo
+        const modal = new ModalBuilder()
+            .setCustomId('TICKET_CLOSE_MODAL')
+            .setTitle('🔒 Motivo de Cierre de Ticket');
+
+        const reasonInput = new TextInputBuilder()
+            .setCustomId('closeReason')
+            .setLabel("Motivo del Cierre")
+            .setStyle(TextInputStyle.Paragraph)
+            .setPlaceholder('Ej: Solucionado por Soporte Técnico. | Jugador no responde. | Reporte inválido.')
+            .setRequired(true)
+            .setMinLength(10)
+            .setMaxLength(500);
+
+        const firstActionRow = new ActionRowBuilder().addComponents(reasonInput);
+
+        modal.addComponents(firstActionRow);
+
+        await interaction.showModal(modal);
+        return;
     }
     
     // --- 3. Manejo de Envío de Modal de Cierre y Acciones Finales ---
@@ -755,6 +762,7 @@ const handleComandosCommand = async (message) => {
 
 // =============================
 // 🛠️ COMANDO DE SETUP DEL PANEL DE TICKETS (USO EXCLUSIVO DEL DUEÑO DEL BOT/STAFF)
+// 🟢 MODIFICADO PARA USAR SELECT MENU
 // =============================
 const handleTicketPanelSetup = async (message) => {
     const hasPermissions = message.member.permissions.has(PermissionsBitField.Flags.Administrator);
@@ -769,29 +777,22 @@ const handleTicketPanelSetup = async (message) => {
     
     await message.delete().catch(() => {});
     
-    const rows = [];
-    let currentRow = new ActionRowBuilder();
-    let buttonCount = 0;
-
-    for (const opt of TICKET_OPTIONS) {
-        if (buttonCount === 5) { 
-            rows.push(currentRow);
-            currentRow = new ActionRowBuilder();
-            buttonCount = 0;
-        }
-
-        currentRow.addComponents(
-            new ButtonBuilder()
-                .setCustomId(opt.id)
-                .setLabel(opt.label)
-                .setStyle(opt.style)
-                .setEmoji(opt.emoji)
+    // 🟢 NUEVA LÓGICA: CREACIÓN DEL MENÚ DESPLEGABLE
+    const selectMenu = new StringSelectMenuBuilder()
+        .setCustomId('TICKET_SELECT_MENU')
+        .setPlaceholder('Elige el tipo de ticket que deseas abrir...')
+        .addOptions(
+            TICKET_OPTIONS.map(opt => 
+                new StringSelectMenuOptionBuilder()
+                    .setLabel(opt.label)
+                    .setDescription(opt.title) 
+                    .setValue(opt.id)
+                    .setEmoji(opt.emoji)
+            )
         );
-        buttonCount++;
-    }
-    if (buttonCount > 0) {
-        rows.push(currentRow);
-    }
+
+    const row = new ActionRowBuilder().addComponents(selectMenu);
+
 
     const embed = new EmbedBuilder()
         .setColor("#9B59B6")
@@ -811,7 +812,8 @@ const handleTicketPanelSetup = async (message) => {
         .setImage("https://cdn.discordapp.com/attachments/1371756848839135272/1425277551667970058/Trevel_Verde.png?ex=68ec46a8&is=68eaf528&hm=079b5d5c756a6197d320ceca8ee974e82c3e5a187eb2b8294be2af4583c82ce8&") 
         .setFooter({ text: "¡Elige tu opción para empezar! 💜" });
 
-    await channel.send({ embeds: [embed], components: rows });
+    // 🟢 Envía el panel con el menú desplegable en el ActionRow
+    await channel.send({ embeds: [embed], components: [row] }); 
     console.log("[Tickets] Panel de tickets enviado correctamente.");
 }
 
