@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alvarez Perfumeria · Haute Parfumerie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#c9a96e;
+  --gold-light:#e8d5a3;
+  --gold-bright:#f5e6b8;
+  --gold-dim:rgba(201,169,110,.18);
+  --bg:#06080f;
+  --navy:#080d1e;
+  --navy2:#0a1228;
+  --text:#f0ece3;
+  --muted:rgba(240,236,227,.48);
+  --bronze-ped:#2a1a08;
+  --bronze-mid:#3d2610;
+  --bronze-hi:#6b4520;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Jost',sans-serif;
+  overflow-x:hidden;
+}
+
+/* ═══════════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:900;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 52px;
+  background:linear-gradient(to bottom,rgba(6,8,15,.95) 0%,rgba(6,8,15,.6) 60%,transparent 100%);
+}
+.nav-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:15px;font-weight:300;letter-spacing:.35em;text-transform:uppercase;
+  color:var(--text);
+}
+.nav-links{
+  display:flex;gap:38px;list-style:none;
+  background:rgba(255,255,255,.05);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.09);
+  padding:10px 30px;border-radius:50px;
+}
+.nav-links a{
+  color:var(--muted);text-decoration:none;
+  font-size:11px;font-weight:300;letter-spacing:.16em;text-transform:uppercase;
+  transition:color .3s;
+}
+.nav-links a:hover{color:var(--gold)}
+.nav-right{
+  display:flex;align-items:center;gap:22px;
+  font-size:11px;font-weight:300;letter-spacing:.16em;color:var(--muted);
+}
+.nav-cart{cursor:pointer;transition:color .3s}.nav-cart:hover{color:var(--gold)}
+@media(max-width:768px){
+  .nav-links{display:none}
+  nav{padding:18px 20px}
+}
+
+/* ═══════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════ */
+#hero{
+  position:relative;width:100%;
+  height:100vh;height:100dvh;
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* Deep navy background */
+#hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 90% 80% at 50% 70%, #0e1f45 0%, #080d1e 40%, #06080f 100%);
+}
+
+/* Top vignette */
+#hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(6,8,15,.7),transparent);
+}
+
+/* Spotlight cone from top center */
+#spotlight{
+  position:absolute;
+  top:-5%;left:50%;transform:translateX(-50%);
+  width:min(700px,95vw);height:100%;
+  background:conic-gradient(
+    from 180deg at 50% 0%,
+    transparent            72deg,
+    rgba(201,169,110,.06)  86deg,
+    rgba(201,169,110,.16)  93deg,
+    rgba(220,180,100,.22)  100deg,
+    rgba(201,169,110,.16)  107deg,
+    rgba(201,169,110,.06)  114deg,
+    transparent            128deg
+  );
+  z-index:1;pointer-events:none;
+  animation:spotBreath 7s ease-in-out infinite;
+}
+@keyframes spotBreath{0%,100%{opacity:.8}50%{opacity:1}}
+
+/* Subtle noise grain overlay */
+#grain{
+  position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.028;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px;
+}
+
+/* Animated silk ribbon */
+#silk{
+  position:absolute;bottom:22%;left:50%;transform:translateX(-50%);
+  width:115%;z-index:3;pointer-events:none;
+  animation:silkFloat 8s ease-in-out infinite;
+}
+@keyframes silkFloat{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-6px)}}
+
+/* Brand text — giant, behind bottle */
+#brand-text{
+  position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(64px,12.5vw,185px);
+  font-weight:300;letter-spacing:-.01em;
+  color:rgba(240,236,227,.88);
+  white-space:nowrap;
+  z-index:4;pointer-events:none;user-select:none;
+  text-shadow:0 2px 80px rgba(201,169,110,.1);
+  /* slight parallax on mouse */
+  transition:transform .08s ease;
+}
+
+/* ── CAROUSEL ────────────────────────── */
+#carousel{
+  position:absolute;inset:0;z-index:5;
+  display:flex;align-items:flex-end;justify-content:center;
+}
+.slide{
+  position:absolute;inset:0;
+  display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;
+  transition:opacity 1s cubic-bezier(.4,0,.2,1);
+  pointer-events:none;
+  padding-bottom:0;
+}
+.slide.active{opacity:1;pointer-events:all}
+
+/* Pedestal + bottle container */
+.pedestal-wrap{
+  position:relative;
+  display:flex;flex-direction:column;align-items:center;
+  z-index:6;
+  bottom:0;
+}
+
+/* 3-tier pedestal drawn via CSS */
+.pedestal{
+  position:relative;
+  display:flex;flex-direction:column;align-items:center;
+  margin-top:auto;
+}
+.ped-tier{
+  background:linear-gradient(to bottom, var(--bronze-hi) 0%, var(--bronze-mid) 40%, var(--bronze-ped) 100%);
+  border-radius:3px 3px 0 0;
+  position:relative;
+}
+.ped-tier::before{/* top face shine */
+  content:'';position:absolute;top:0;left:4px;right:4px;height:6px;
+  background:linear-gradient(to right,var(--bronze-mid),var(--bronze-hi),var(--bronze-mid));
+  border-radius:2px 2px 0 0;
+}
+.ped-tier.t1{width:clamp(180px,22vw,280px);height:clamp(18px,2.2vw,28px)}
+.ped-tier.t2{width:clamp(145px,17vw,220px);height:clamp(15px,1.8vw,22px)}
+.ped-tier.t3{width:clamp(110px,13vw,165px);height:clamp(12px,1.4vw,18px)}
+
+/* pedestal glow */
+.pedestal::after{
+  content:'';position:absolute;
+  bottom:-2px;left:50%;transform:translateX(-50%);
+  width:120%;height:30px;
+  background:radial-gradient(ellipse 80% 100% at 50% 100%, rgba(201,169,110,.18), transparent);
+  pointer-events:none;
+}
+
+/* bottle image */
+.bottle-img{
+  width:clamp(160px,18vw,260px);
+  height:auto;
+  display:block;
+  margin-bottom:0;
+  filter:drop-shadow(0 -10px 50px rgba(201,169,110,.25))
+         drop-shadow(0 30px 60px rgba(0,0,0,.95));
+  transition:transform .6s cubic-bezier(.34,1.26,.64,1);
+  transform:translateY(0);
+  /* floating animation per slide */
+}
+.slide.active .bottle-img{
+  animation:bottleFloat 5s ease-in-out infinite;
+}
+@keyframes bottleFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+}
+
+/* Side bottles */
+.side-bottle{
+  position:absolute;bottom:8%;
+  width:clamp(70px,8vw,115px);
+  opacity:.38;
+  filter:blur(8px) brightness(.5) saturate(.7);
+  transition:opacity .8s;
+  pointer-events:none;
+  z-index:4;
+}
+.side-bottle.left{left:4%}
+.side-bottle.right{right:4%}
+@media(max-width:600px){.side-bottle{display:none}}
+
+/* ── CAROUSEL NAV ARROWS ─────────────── */
+.arrow-btn{
+  position:absolute;top:50%;transform:translateY(-50%);
+  z-index:10;
+  width:38px;height:38px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:50%;
+  color:var(--muted);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  backdrop-filter:blur(8px);
+  transition:all .3s;
+}
+.arrow-btn:hover{
+  background:rgba(201,169,110,.14);
+  border-color:rgba(201,169,110,.45);
+  color:var(--gold);
+  box-shadow:0 0 20px rgba(201,169,110,.1);
+}
+#btn-prev{left:44%}#btn-next{right:44%}
+@media(max-width:768px){#btn-prev{left:28%}#btn-next{right:28%}}
+
+/* ── PRODUCT CARD ─────────────────────── */
+#product-card{
+  position:absolute;bottom:28px;left:48px;
+  z-index:10;
+  background:rgba(6,8,15,.68);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid rgba(201,169,110,.22);
+  border-radius:3px;
+  padding:18px 22px;
+  min-width:215px;
+  transform:translateY(0);
+  opacity:1;
+  transition:opacity .5s ease, transform .5s ease;
+}
+#product-card.switching{opacity:0;transform:translateY(6px)}
+#pname{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:400;letter-spacing:.06em;
+  margin-bottom:5px;
+}
+#pnotes{font-size:10px;font-weight:300;letter-spacing:.07em;color:var(--muted);line-height:1.75;margin-bottom:11px}
+#pmeta{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:10px;letter-spacing:.1em;color:var(--gold-light);
+  border-top:1px solid rgba(201,169,110,.14);padding-top:9px;gap:12px;
+}
+@media(max-width:600px){#product-card{left:14px;bottom:68px;padding:13px 15px;min-width:175px}}
+
+/* ── EXPLORE BUTTON ──────────────────── */
+#explore-btn{
+  position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
+  z-index:10;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.2);
+  color:var(--text);
+  font-family:'Jost',sans-serif;font-size:11px;font-weight:300;
+  letter-spacing:.22em;text-transform:uppercase;
+  padding:13px 36px;border-radius:50px;
+  text-decoration:none;
+  backdrop-filter:blur(12px);
+  transition:all .35s;
+  white-space:nowrap;
+}
+#explore-btn:hover{
+  background:rgba(201,169,110,.14);
+  border-color:rgba(201,169,110,.5);
+  color:var(--gold);
+  box-shadow:0 0 30px rgba(201,169,110,.12);
+}
+@media(max-width:600px){#explore-btn{bottom:16px;font-size:10px;padding:11px 26px}}
+
+/* ── BOTTOM TAG ───────────────────────── */
+#bottom-tag{
+  position:absolute;bottom:38px;right:50px;z-index:10;
+  font-size:10px;font-weight:300;letter-spacing:.28em;color:var(--muted);text-transform:uppercase;
+}
+@media(max-width:768px){#bottom-tag{display:none}}
+
+/* ── DOTS ─────────────────────────────── */
+#dots{
+  position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+  z-index:10;display:flex;gap:8px;align-items:center;
+}
+.dot{
+  width:5px;height:5px;border-radius:50%;
+  background:rgba(201,169,110,.3);cursor:pointer;
+  transition:all .35s;border:none;padding:0;
+}
+.dot.active{background:var(--gold);width:22px;border-radius:3px}
+.dot:hover{background:rgba(201,169,110,.65)}
+
+/* ═══════════════════════════════════════════════
+   MARQUEE
+═══════════════════════════════════════════════ */
+.marquee-strip{
+  border-top:1px solid rgba(201,169,110,.12);
+  border-bottom:1px solid rgba(201,169,110,.12);
+  padding:14px 0;overflow:hidden;white-space:nowrap;
+  background:rgba(201,169,110,.022);
+}
+.marquee-inner{display:inline-flex;animation:marq 24s linear infinite}
+.marquee-inner.rev{animation-direction:reverse}
+.mi{
+  display:inline-flex;align-items:center;gap:16px;
+  margin-right:32px;
+  font-size:10px;font-weight:300;letter-spacing:.28em;
+  color:var(--muted);text-transform:uppercase;
+}
+.mdot{width:4px;height:4px;background:var(--gold);transform:rotate(45deg);flex-shrink:0}
+@keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ═══════════════════════════════════════════════
+   COLLECTION SECTION
+═══════════════════════════════════════════════ */
+#collection{background:var(--bg);padding:110px 52px 100px}
+@media(max-width:768px){#collection{padding:80px 20px}}
+
+.section-eyebrow{
+  font-size:10px;font-weight:300;letter-spacing:.35em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:14px;
+}
+.section-heading{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(34px,5vw,62px);font-weight:300;
+  line-height:1.08;margin-bottom:58px;max-width:460px;
+}
+.section-heading em{font-style:italic;color:var(--gold-light)}
+
+.coll-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
+}
+@media(max-width:768px){.coll-grid{grid-template-columns:1fr;gap:3px}}
+
+.coll-card{
+  position:relative;overflow:hidden;
+  aspect-ratio:3/4;background:#0a0c15;cursor:pointer;
+}
+.coll-card::after{/* gradient overlay */
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(6,8,15,.96) 0%,rgba(6,8,15,.35) 48%,rgba(6,8,15,.08) 100%);
+  z-index:2;transition:opacity .5s;
+}
+.coll-card:hover::after{opacity:.75}
+
+.coll-bg{
+  position:absolute;inset:0;z-index:1;overflow:hidden;
+  transition:transform .75s cubic-bezier(.4,0,.2,1);
+}
+.coll-card:hover .coll-bg{transform:scale(1.07)}
+
+.coll-bg img{width:100%;height:100%;object-fit:contain;object-position:center 60%;padding:15% 20% 5%}
+
+/* Atmospheric bg per card */
+.coll-bg-noir {background:radial-gradient(ellipse at 50% 35%,#201408 0%,#0e0804 50%,#060402 100%)}
+.coll-bg-blue {background:radial-gradient(ellipse at 50% 35%,#0d1f40 0%,#070f20 50%,#040810 100%)}
+.coll-bg-ambre{background:radial-gradient(ellipse at 50% 35%,#2a1202 0%,#160901 50%,#080400 100%)}
+
+/* card spotlight */
+.coll-bg::after{
+  content:'';position:absolute;top:-20%;left:50%;transform:translateX(-50%);
+  width:60%;height:70%;
+  background:conic-gradient(from 180deg at 50% 0%,transparent 70deg,rgba(201,169,110,.12) 90deg,rgba(201,169,110,.22) 100deg,rgba(201,169,110,.12) 110deg,transparent 130deg);
+  z-index:1;pointer-events:none;
+}
+
+.coll-info{
+  position:absolute;bottom:0;left:0;right:0;z-index:3;padding:24px 22px;
+}
+.coll-num{font-size:9px;letter-spacing:.32em;color:var(--gold);margin-bottom:7px}
+.coll-name{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;margin-bottom:5px}
+.coll-notes{font-size:10px;font-weight:300;letter-spacing:.05em;color:var(--muted);line-height:1.65}
+.coll-price{
+  font-size:11px;letter-spacing:.1em;color:var(--gold-light);
+  margin-top:12px;display:flex;align-items:center;gap:10px;
+}
+.coll-price::before{content:'';flex:1;height:1px;background:rgba(201,169,110,.2)}
+
+/* ── ADD TO CART HOVER ─────────────────── */
+.coll-btn{
+  position:absolute;top:18px;right:18px;z-index:4;
+  background:rgba(6,8,15,.7);backdrop-filter:blur(10px);
+  border:1px solid rgba(201,169,110,.25);border-radius:2px;
+  color:var(--gold);font-family:'Jost',sans-serif;
+  font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  padding:8px 14px;cursor:pointer;
+  opacity:0;transform:translateY(-6px);
+  transition:all .35s;
+}
+.coll-card:hover .coll-btn{opacity:1;transform:translateY(0)}
+.coll-btn:hover{background:rgba(201,169,110,.15);border-color:var(--gold)}
+
+/* ═══════════════════════════════════════════════
+   FEATURED / SPLIT SECTION
+═══════════════════════════════════════════════ */
+#featured{
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:70vh;
+}
+@media(max-width:768px){#featured{grid-template-columns:1fr}}
+
+.feat-visual{
+  position:relative;overflow:hidden;background:var(--navy2);
+  min-height:400px;
+}
+.feat-visual canvas{width:100%;height:100%;display:block}
+.feat-visual-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(6,8,15,.1),rgba(6,8,15,.5));
+  pointer-events:none;
+}
+
+.feat-text{
+  background:var(--navy);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:80px 60px;
+}
+@media(max-width:768px){.feat-text{padding:50px 24px}}
+
+.feat-quote{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(26px,3.2vw,44px);
+  font-weight:300;font-style:italic;line-height:1.42;
+  margin-bottom:30px;
+}
+.feat-body{
+  font-size:12px;font-weight:300;letter-spacing:.04em;
+  color:var(--muted);line-height:2.1;margin-bottom:38px;
+}
+.feat-divider{
+  width:40px;height:1px;background:var(--gold);
+  margin-bottom:24px;
+}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:12px;
+  border:1px solid rgba(201,169,110,.38);color:var(--gold);
+  font-family:'Jost',sans-serif;font-size:10px;font-weight:300;
+  letter-spacing:.25em;text-transform:uppercase;
+  padding:13px 28px;text-decoration:none;
+  transition:all .3s;width:fit-content;
+}
+.btn-ghost:hover{background:rgba(201,169,110,.08);border-color:var(--gold)}
+.btn-ghost svg{transition:transform .3s}
+.btn-ghost:hover svg{transform:translateX(4px)}
+
+/* ═══════════════════════════════════════════════
+   STATS BAR
+═══════════════════════════════════════════════ */
+#stats{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-top:1px solid rgba(201,169,110,.1);
+  border-bottom:1px solid rgba(201,169,110,.1);
+}
+@media(max-width:600px){#stats{grid-template-columns:repeat(2,1fr)}}
+.stat{
+  padding:44px 32px;text-align:center;
+  border-right:1px solid rgba(201,169,110,.08);
+  transition:background .3s;
+}
+.stat:last-child{border-right:none}
+.stat:hover{background:rgba(201,169,110,.03)}
+.stat-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(36px,5vw,56px);font-weight:300;
+  color:var(--gold);line-height:1;margin-bottom:8px;
+}
+.stat-label{font-size:10px;font-weight:300;letter-spacing:.25em;color:var(--muted);text-transform:uppercase}
+
+/* ═══════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════ */
+footer{
+  background:var(--navy);
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.footer-top{
+  display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr;gap:48px;
+  padding:72px 52px 56px;
+}
+@media(max-width:768px){.footer-top{grid-template-columns:1fr;padding:48px 20px 36px;gap:36px}}
+
+.footer-brand-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:300;letter-spacing:.3em;
+  text-transform:uppercase;margin-bottom:16px;
+}
+.footer-tagline{font-size:11px;font-weight:300;letter-spacing:.06em;color:var(--muted);line-height:1.85;max-width:220px}
+
+.footer-col-title{
+  font-size:9px;font-weight:400;letter-spacing:.35em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:20px;
+}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:11px}
+.footer-links a{
+  font-size:12px;font-weight:300;letter-spacing:.06em;color:var(--muted);
+  text-decoration:none;transition:color .3s;
+}
+.footer-links a:hover{color:var(--gold-light)}
+
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,.05);
+  padding:22px 52px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:10px;font-weight:300;letter-spacing:.12em;color:var(--muted);
+}
+@media(max-width:768px){.footer-bottom{flex-direction:column;gap:12px;text-align:center;padding:18px 20px}}
+
+/* ═══════════════════════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════════════════════ */
+.reveal{
+  opacity:0;transform:translateY(28px);
+  transition:opacity .85s cubic-bezier(.4,0,.2,1),transform .85s cubic-bezier(.4,0,.2,1);
+}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* stagger children */
+.reveal-stagger > *{
+  opacity:0;transform:translateY(20px);
+  transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1);
+}
+.reveal-stagger.visible > *:nth-child(1){opacity:1;transform:translateY(0);transition-delay:.0s}
+.reveal-stagger.visible > *:nth-child(2){opacity:1;transform:translateY(0);transition-delay:.12s}
+.reveal-stagger.visible > *:nth-child(3){opacity:1;transform:translateY(0);transition-delay:.24s}
+.reveal-stagger.visible > *:nth-child(4){opacity:1;transform:translateY(0);transition-delay:.36s}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ═════════════════════════════════════ -->
+<nav>
+  <div class="nav-logo">Alvarez Perfumeria</div>
+  <ul class="nav-links">
+    <li><a href="#collection">Colección</a></li>
+    <li><a href="#featured">La Maison</a></li>
+    <li><a href="#">Artesanía</a></li>
+    <li><a href="#">Contacto</a></li>
+  </ul>
+  <div class="nav-right">
+    <span>ES</span>
+    <span class="nav-cart">Boutique (0)</span>
+  </div>
+</nav>
+
+<!-- ══ HERO ════════════════════════════════════ -->
+<section id="hero">
+  <div id="hero-bg"></div>
+  <div id="spotlight"></div>
+  <div id="grain"></div>
+
+  <!-- Animated silk SVG -->
+  <svg id="silk" viewBox="0 0 1440 260" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%"   stop-color="#0e0900" stop-opacity="0"/>
+        <stop offset="10%"  stop-color="#c9a96e" stop-opacity=".28"/>
+        <stop offset="30%"  stop-color="#e8d5a3" stop-opacity=".55"/>
+        <stop offset="50%"  stop-color="#c9a96e" stop-opacity=".4"/>
+        <stop offset="70%"  stop-color="#e8d5a3" stop-opacity=".5"/>
+        <stop offset="90%"  stop-color="#c9a96e" stop-opacity=".28"/>
+        <stop offset="100%" stop-color="#0e0900" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="sg2" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%"   stop-color="#0e0900" stop-opacity="0"/>
+        <stop offset="20%"  stop-color="#c9a96e" stop-opacity=".15"/>
+        <stop offset="50%"  stop-color="#f0e2b4" stop-opacity=".32"/>
+        <stop offset="80%"  stop-color="#c9a96e" stop-opacity=".15"/>
+        <stop offset="100%" stop-color="#0e0900" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <!-- main ribbon -->
+    <path d="M-120,155 C80,55 200,245 440,135 C680,25 780,205 1020,115 C1260,25 1360,190 1580,105"
+          fill="none" stroke="url(#sg)" stroke-width="58"/>
+    <!-- secondary -->
+    <path d="M-120,192 C120,98 240,268 520,162 C800,56 900,232 1180,152 C1380,72 1480,210 1620,142"
+          fill="none" stroke="url(#sg2)" stroke-width="26" opacity=".6"/>
+    <!-- highlight -->
+    <path d="M-120,155 C80,55 200,245 440,135 C680,25 780,205 1020,115 C1260,25 1360,190 1580,105"
+          fill="none" stroke="rgba(255,242,185,.25)" stroke-width="4.5"/>
+    <!-- shimmer -->
+    <path d="M-120,155 C80,55 200,245 440,135 C680,25 780,205 1020,115 C1260,25 1360,190 1580,105"
+          fill="none" stroke="rgba(255,255,200,.55)" stroke-width="2" stroke-dasharray="65 270">
+      <animate attributeName="stroke-dashoffset" from="0" to="-335" dur="2.6s" repeatCount="indefinite"/>
+    </path>
+  </svg>
+
+  <!-- Giant brand name — z-index 4, behind bottles -->
+  <div id="brand-text">ALVAREZ</div>
+
+  <!-- Carousel -->
+  <div id="carousel">
+
+    <!-- Slide 0 — IL MEXICO -->
+    <div class="slide active" data-idx="0">
+      <div class="pedestal-wrap">
+        <div class="bottle-stage">
+          <img class="bottle-img" src="ILMEXICO.webp" alt="IL Mexico" draggable="false">
+        </div>
+        <div class="pedestal">
+          <div class="ped-tier t3"></div>
+          <div class="ped-tier t2"></div>
+          <div class="ped-tier t1"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 1 — 9PM ELIXIR -->
+    <div class="slide" data-idx="1">
+      <div class="pedestal-wrap">
+        <div class="bottle-stage">
+          <img class="bottle-img" src="9PM_ELIXIR-1.webp" alt="9PM Elixir" draggable="false">
+        </div>
+        <div class="pedestal">
+          <div class="ped-tier t3"></div>
+          <div class="ped-tier t2"></div>
+          <div class="ped-tier t1"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2 — HAWAS -->
+    <div class="slide" data-idx="2">
+      <div class="pedestal-wrap">
+        <div class="bottle-stage">
+          <img class="bottle-img" src="HAWAS.webp" alt="Hawas" draggable="false">
+        </div>
+        <div class="pedestal">
+          <div class="ped-tier t3"></div>
+          <div class="ped-tier t2"></div>
+          <div class="ped-tier t1"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /carousel -->
+
+  <!-- Side blurred bottles -->
+  <img class="side-bottle left"  src="9PM_ELIXIR-1.webp" alt="" aria-hidden="true">
+  <img class="side-bottle right" src="HAWAS.webp"        alt="" aria-hidden="true">
+
+  <!-- Arrows -->
+  <button class="arrow-btn" id="btn-prev" aria-label="Anterior">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="arrow-btn" id="btn-next" aria-label="Siguiente">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+
+  <!-- Product card -->
+  <div id="product-card">
+    <div id="pname">IL Mexico</div>
+    <div id="pnotes">Cítricos brillantes. Madera de sándalo.<br>Elegancia sin límites.</div>
+    <div id="pmeta">
+      <span id="pmeta-vol">100ml · Extrait de Parfum</span>
+      <span id="pmeta-price">$1,850</span>
+    </div>
+  </div>
+
+  <a href="#collection" id="explore-btn">Explorar Ahora</a>
+  <div id="bottom-tag">· Haute Parfumerie</div>
+
+  <div id="dots">
+    <button class="dot active" aria-label="Slide 1"></button>
+    <button class="dot" aria-label="Slide 2"></button>
+    <button class="dot" aria-label="Slide 3"></button>
+  </div>
+</section>
+
+<!-- ══ MARQUEE 1 ════════════════════════════════ -->
+<div class="marquee-strip">
+  <div class="marquee-inner">
+    <span class="mi"><span class="mdot"></span>Haute Parfumerie</span>
+    <span class="mi"><span class="mdot"></span>Alvarez Perfumeria</span>
+    <span class="mi"><span class="mdot"></span>Extrait de Parfum</span>
+    <span class="mi"><span class="mdot"></span>Fragancias Exclusivas</span>
+    <span class="mi"><span class="mdot"></span>Ingredientes Premium</span>
+    <span class="mi"><span class="mdot"></span>Edición Limitada</span>
+    <span class="mi"><span class="mdot"></span>Haute Parfumerie</span>
+    <span class="mi"><span class="mdot"></span>Alvarez Perfumeria</span>
+    <span class="mi"><span class="mdot"></span>Extrait de Parfum</span>
+    <span class="mi"><span class="mdot"></span>Fragancias Exclusivas</span>
+    <span class="mi"><span class="mdot"></span>Ingredientes Premium</span>
+    <span class="mi"><span class="mdot"></span>Edición Limitada</span>
+  </div>
+</div>
+
+<!-- ══ COLLECTION ══════════════════════════════ -->
+<section id="collection">
+  <div class="reveal">
+    <div class="section-eyebrow">La Colección</div>
+    <h2 class="section-heading">Fragancias que<br><em>cuentan historias</em></h2>
+  </div>
+  <div class="coll-grid reveal-stagger">
+
+    <div class="coll-card">
+      <div class="coll-bg coll-bg-noir">
+        <img src="ILMEXICO.webp" alt="IL Mexico">
+      </div>
+      <button class="coll-btn">+ Agregar</button>
+      <div class="coll-info">
+        <div class="coll-num">N° 01</div>
+        <div class="coll-name">IL Mexico</div>
+        <div class="coll-notes">Cítricos · Sándalo · Oud<br>Vainilla · Almizcle blanco</div>
+        <div class="coll-price">$1,850 · 100ml</div>
+      </div>
+    </div>
+
+    <div class="coll-card">
+      <div class="coll-bg coll-bg-blue">
+        <img src="9PM_ELIXIR-1.webp" alt="9PM Elixir">
+      </div>
+      <button class="coll-btn">+ Agregar</button>
+      <div class="coll-info">
+        <div class="coll-num">N° 02</div>
+        <div class="coll-name">9PM Elixir</div>
+        <div class="coll-notes">Noche profunda · Especias<br>Cedro · Ámbar oscuro</div>
+        <div class="coll-price">$2,100 · 100ml</div>
+      </div>
+    </div>
+
+    <div class="coll-card">
+      <div class="coll-bg coll-bg-ambre">
+        <img src="HAWAS.webp" alt="Hawas">
+      </div>
+      <button class="coll-btn">+ Agregar</button>
+      <div class="coll-info">
+        <div class="coll-num">N° 03</div>
+        <div class="coll-name">Hawas</div>
+        <div class="coll-notes">Frescura marina · Pimienta<br>Vetiver · Musgo</div>
+        <div class="coll-price">$1,650 · 100ml</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ MARQUEE 2 ════════════════════════════════ -->
+<div class="marquee-strip">
+  <div class="marquee-inner rev">
+    <span class="mi"><span class="mdot"></span>Envío a Todo México</span>
+    <span class="mi"><span class="mdot"></span>Auténtico 100%</span>
+    <span class="mi"><span class="mdot"></span>Atención Personalizada</span>
+    <span class="mi"><span class="mdot"></span>Empaque de Lujo</span>
+    <span class="mi"><span class="mdot"></span>Fragancia Garantizada</span>
+    <span class="mi"><span class="mdot"></span>Envío a Todo México</span>
+    <span class="mi"><span class="mdot"></span>Auténtico 100%</span>
+    <span class="mi"><span class="mdot"></span>Atención Personalizada</span>
+    <span class="mi"><span class="mdot"></span>Empaque de Lujo</span>
+    <span class="mi"><span class="mdot"></span>Fragancia Garantizada</span>
+  </div>
+</div>
+
+<!-- ══ FEATURED / ABOUT ═════════════════════════ -->
+<section id="featured">
+  <div class="feat-visual reveal">
+    <canvas id="feat-canvas" width="700" height="600" style="width:100%;height:100%;display:block"></canvas>
+    <div class="feat-visual-overlay"></div>
+  </div>
+  <div class="feat-text reveal">
+    <div class="section-eyebrow">Nuestra Filosofía</div>
+    <div class="feat-divider"></div>
+    <blockquote class="feat-quote">"El perfume es el arte que hace<br>visible lo invisible."</blockquote>
+    <p class="feat-body">En Alvarez Perfumeria creemos que cada fragancia es una experiencia sensorial única. Seleccionamos cuidadosamente cada perfume de las más prestigiosas casas del mundo — desde Orientica hasta Afnan — para llevarte lo mejor de la alta perfumería con autenticidad garantizada.</p>
+    <a href="#collection" class="btn-ghost">
+      Ver Colección Completa
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- ══ STATS ════════════════════════════════════ -->
+<div id="stats" class="reveal-stagger">
+  <div class="stat">
+    <div class="stat-num">+150</div>
+    <div class="stat-label">Fragancias</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">100%</div>
+    <div class="stat-label">Originales</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">+5K</div>
+    <div class="stat-label">Clientes Felices</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">24h</div>
+    <div class="stat-label">Envío Express</div>
+  </div>
+</div>
+
+<!-- ══ FOOTER ═══════════════════════════════════ -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">Alvarez Perfumeria</div>
+      <p class="footer-tagline">Haute Parfumerie de las marcas más exclusivas del mundo, con autenticidad garantizada y envío a todo México.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Colección</div>
+      <ul class="footer-links">
+        <li><a href="#">IL Mexico</a></li>
+        <li><a href="#">9PM Elixir</a></li>
+        <li><a href="#">Hawas</a></li>
+        <li><a href="#">Ver todo</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">La Maison</div>
+      <ul class="footer-links">
+        <li><a href="#">Nuestra Historia</a></li>
+        <li><a href="#">Artesanía</a></li>
+        <li><a href="#">Sostenibilidad</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Contacto</div>
+      <ul class="footer-links">
+        <li><a href="#">WhatsApp</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">TikTok</a></li>
+        <li><a href="#">Email</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Alvarez Perfumeria · Todos los derechos reservados</span>
+    <span>CDMX · Haute Parfumerie</span>
+  </div>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════
+   PARALLAX — brand text subtle mouse movement
+═══════════════════════════════════════════════ */
+const brandTxt = document.getElementById('brand-text');
+let tgtX=0, tgtY=0, curX=0, curY=0;
+document.getElementById('hero').addEventListener('mousemove', e => {
+  const cx = window.innerWidth/2, cy = window.innerHeight/2;
+  tgtX = (e.clientX - cx) * 0.012;
+  tgtY = (e.clientY - cy) * 0.006;
+});
+(function parallaxLoop(){
+  curX += (tgtX - curX) * .06;
+  curY += (tgtY - curY) * .06;
+  brandTxt.style.transform = `translate(calc(-50% + ${curX}px), calc(-50% + ${curY}px))`;
+  requestAnimationFrame(parallaxLoop);
+})();
+
+/* ═══════════════════════════════════════════════
+   CAROUSEL
+═══════════════════════════════════════════════ */
+const products = [
+  { name:'IL Mexico',    notes:'Cítricos brillantes. Madera de sándalo.<br>Elegancia sin límites.',   vol:'100ml · Extrait de Parfum', price:'$1,850' },
+  { name:'9PM Elixir',   notes:'Noche profunda. Especias orientales.<br>Ámbar magnético.',             vol:'100ml · Elixir de Parfum',  price:'$2,100' },
+  { name:'Hawas',        notes:'Frescura marina. Pimienta negra.<br>Vetiver y musgo del bosque.',      vol:'100ml · Eau de Parfum',     price:'$1,650' },
+];
+
+const slides   = document.querySelectorAll('.slide');
+const dots     = document.querySelectorAll('.dot');
+const sideL    = document.querySelector('.side-bottle.left');
+const sideR    = document.querySelector('.side-bottle.right');
+const sideSrcs = ['ILMEXICO.webp','9PM_ELIXIR-1.webp','HAWAS.webp'];
+let cur = 0;
+
+function goTo(n, dir=1) {
+  slides[cur].classList.remove('active');
+  dots[cur].classList.remove('active');
+  cur = ((n % slides.length) + slides.length) % slides.length;
+  slides[cur].classList.add('active');
+  dots[cur].classList.add('active');
+
+  // Update side bottles
+  const prev = ((cur - 1) + sideSrcs.length) % sideSrcs.length;
+  const next = (cur + 1) % sideSrcs.length;
+  sideL.src = sideSrcs[prev];
+  sideR.src = sideSrcs[next];
+
+  // Update card with fade
+  const card = document.getElementById('product-card');
+  card.classList.add('switching');
+  setTimeout(() => {
+    const p = products[cur];
+    document.getElementById('pname').textContent          = p.name;
+    document.getElementById('pnotes').innerHTML           = p.notes;
+    document.getElementById('pmeta-vol').textContent      = p.vol;
+    document.getElementById('pmeta-price').textContent    = p.price;
+    card.classList.remove('switching');
+  }, 280);
+}
+
+let autoTimer = setInterval(() => goTo(cur + 1), 5500);
+function resetAuto() { clearInterval(autoTimer); autoTimer = setInterval(() => goTo(cur+1), 5500); }
+
+document.getElementById('btn-prev').addEventListener('click', () => { goTo(cur-1); resetAuto(); });
+document.getElementById('btn-next').addEventListener('click', () => { goTo(cur+1); resetAuto(); });
+dots.forEach((d,i) => d.addEventListener('click', () => { goTo(i); resetAuto(); }));
+
+// Touch swipe
+let tsX = 0;
+const hero = document.getElementById('hero');
+hero.addEventListener('touchstart', e => tsX = e.touches[0].clientX, {passive:true});
+hero.addEventListener('touchend',   e => {
+  const dx = e.changedTouches[0].clientX - tsX;
+  if (Math.abs(dx) > 45) { goTo(cur + (dx < 0 ? 1 : -1)); resetAuto(); }
+}, {passive:true});
+
+/* ═══════════════════════════════════════════════
+   FEATURED CANVAS — atmospheric perfume visual
+═══════════════════════════════════════════════ */
+(function drawFeatured(){
+  const cv = document.getElementById('feat-canvas');
+  const c  = cv.getContext('2d');
+  const w  = cv.width, h = cv.height;
+
+  // Background
+  const bg = c.createLinearGradient(0,0,w,h);
+  bg.addColorStop(0,'#0f1c3a'); bg.addColorStop(.45,'#120a04'); bg.addColorStop(1,'#060402');
+  c.fillStyle = bg; c.fillRect(0,0,w,h);
+
+  // Atmosphere glow
+  const glow = c.createRadialGradient(w*.35,h*.3,0, w*.35,h*.3, w*.55);
+  glow.addColorStop(0,'rgba(201,169,110,.14)'); glow.addColorStop(1,'rgba(0,0,0,0)');
+  c.fillStyle = glow; c.fillRect(0,0,w,h);
+
+  // Abstract decorative lines
+  c.strokeStyle='rgba(201,169,110,.08)'; c.lineWidth=1;
+  for(let i=0;i<6;i++){
+    c.beginPath();
+    c.moveTo(w*.1+i*w*.12, 0);
+    c.lineTo(w*.05+i*w*.12, h);
+    c.stroke();
+  }
+
+  // Gold orb
+  const orb=c.createRadialGradient(w*.35,h*.35,0,w*.35,h*.35,w*.22);
+  orb.addColorStop(0,'rgba(201,169,110,.18)'); orb.addColorStop(.6,'rgba(201,169,110,.04)'); orb.addColorStop(1,'rgba(0,0,0,0)');
+  c.fillStyle=orb; c.fillRect(0,0,w,h);
+})();
+
+/* ═══════════════════════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════════════════════ */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      io.unobserve(e.target);
+    }
+  });
+}, {threshold: .1});
+
+document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
