@@ -177,16 +177,16 @@ nav{
   border-radius:3px 3px 0 0;
   position:relative;
 }
-.ped-tier::before{/* top face shine */
+.ped-tier::before{
   content:'';position:absolute;top:0;left:4px;right:4px;height:6px;
   background:linear-gradient(to right,var(--bronze-mid),var(--bronze-hi),var(--bronze-mid));
   border-radius:2px 2px 0 0;
 }
+/* Desktop pedestal sizes */
 .ped-tier.t1{width:clamp(180px,22vw,280px);height:clamp(18px,2.2vw,28px)}
 .ped-tier.t2{width:clamp(145px,17vw,220px);height:clamp(15px,1.8vw,22px)}
 .ped-tier.t3{width:clamp(110px,13vw,165px);height:clamp(12px,1.4vw,18px)}
 
-/* pedestal glow */
 .pedestal::after{
   content:'';position:absolute;
   bottom:-2px;left:50%;transform:translateX(-50%);
@@ -195,7 +195,7 @@ nav{
   pointer-events:none;
 }
 
-/* bottle image */
+/* bottle image — desktop */
 .bottle-img{
   width:clamp(160px,18vw,260px);
   height:auto;
@@ -203,9 +203,6 @@ nav{
   margin-bottom:0;
   filter:drop-shadow(0 -10px 50px rgba(201,169,110,.25))
          drop-shadow(0 30px 60px rgba(0,0,0,.95));
-  transition:transform .6s cubic-bezier(.34,1.26,.64,1);
-  transform:translateY(0);
-  /* floating animation per slide */
 }
 .slide.active .bottle-img{
   animation:bottleFloat 5s ease-in-out infinite;
@@ -215,7 +212,7 @@ nav{
   50%{transform:translateY(-10px)}
 }
 
-/* Side bottles */
+/* Side bottles — desktop only */
 .side-bottle{
   position:absolute;bottom:8%;
   width:clamp(70px,8vw,115px);
@@ -227,7 +224,6 @@ nav{
 }
 .side-bottle.left{left:4%}
 .side-bottle.right{right:4%}
-@media(max-width:600px){.side-bottle{display:none}}
 
 /* ── CAROUSEL NAV ARROWS ─────────────── */
 .arrow-btn{
@@ -249,10 +245,10 @@ nav{
   color:var(--gold);
   box-shadow:0 0 20px rgba(201,169,110,.1);
 }
+/* Desktop arrow positions */
 #btn-prev{left:44%}#btn-next{right:44%}
-@media(max-width:768px){#btn-prev{left:28%}#btn-next{right:28%}}
 
-/* ── PRODUCT CARD ─────────────────────── */
+/* ── PRODUCT CARD — desktop ──────────── */
 #product-card{
   position:absolute;bottom:28px;left:48px;
   z-index:10;
@@ -278,9 +274,8 @@ nav{
   font-size:10px;letter-spacing:.1em;color:var(--gold-light);
   border-top:1px solid rgba(201,169,110,.14);padding-top:9px;gap:12px;
 }
-@media(max-width:600px){#product-card{left:14px;bottom:68px;padding:13px 15px;min-width:175px}}
 
-/* ── EXPLORE BUTTON ──────────────────── */
+/* ── EXPLORE BUTTON — desktop ────────── */
 #explore-btn{
   position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
   z-index:10;
@@ -301,14 +296,12 @@ nav{
   color:var(--gold);
   box-shadow:0 0 30px rgba(201,169,110,.12);
 }
-@media(max-width:600px){#explore-btn{bottom:16px;font-size:10px;padding:11px 26px}}
 
 /* ── BOTTOM TAG ───────────────────────── */
 #bottom-tag{
   position:absolute;bottom:38px;right:50px;z-index:10;
   font-size:10px;font-weight:300;letter-spacing:.28em;color:var(--muted);text-transform:uppercase;
 }
-@media(max-width:768px){#bottom-tag{display:none}}
 
 /* ── DOTS ─────────────────────────────── */
 #dots{
@@ -322,6 +315,124 @@ nav{
 }
 .dot.active{background:var(--gold);width:22px;border-radius:3px}
 .dot:hover{background:rgba(201,169,110,.65)}
+
+/* ════════════════════════════════════════
+   MOBILE HERO — complete override ≤600px
+════════════════════════════════════════ */
+@media(max-width:600px){
+
+  /* hide desktop side bottles & bottom-tag */
+  .side-bottle{display:none}
+  #bottom-tag{display:none}
+
+  /* brand text smaller so it doesn't overflow */
+  #brand-text{
+    font-size:clamp(44px,13vw,72px);
+    letter-spacing:-.01em;
+    white-space:nowrap;
+    top:50%;
+  }
+
+  /* hero layout: bottle+pedestal centered, arrows flanking */
+  #hero{
+    /* allow internal scroll if needed — keep hidden */
+    overflow:hidden;
+  }
+
+  /* arrows: fixed to left/right edges, vertically centered on bottle zone */
+  #btn-prev{
+    left:6px;
+    top:42%;           /* align with bottle center */
+    transform:translateY(-50%);
+    width:34px;height:34px;
+  }
+  #btn-next{
+    right:6px;
+    top:42%;
+    transform:translateY(-50%);
+    width:34px;height:34px;
+  }
+
+  /* carousel slides: center bottle between the two arrows */
+  .slide{
+    align-items:center;          /* vertically center */
+    justify-content:center;
+    padding-bottom:0;
+    /* leave room for arrows on both sides */
+    padding-left:52px;
+    padding-right:52px;
+    /* bottle sits at 35% from top, pedestal reaches bottom */
+    align-items:flex-end;
+    padding-bottom:clamp(120px,30vw,160px); /* space for card below */
+  }
+
+  /* bottle image: responsive to the 52px-padded zone */
+  .bottle-img{
+    width:clamp(110px,38vw,180px);
+    filter:drop-shadow(0 -6px 30px rgba(201,169,110,.3))
+           drop-shadow(0 16px 40px rgba(0,0,0,.95));
+  }
+
+  /* pedestal tiers: scale down for mobile */
+  .ped-tier.t1{width:clamp(120px,36vw,160px);height:14px}
+  .ped-tier.t2{width:clamp(96px,29vw,128px);height:11px}
+  .ped-tier.t3{width:clamp(72px,22vw,100px);height:9px}
+
+  /* product card: compact pill at bottom, full width */
+  #product-card{
+    position:absolute;
+    bottom:44px;left:12px;right:12px;
+    min-width:unset;
+    padding:12px 15px;
+    /* make it less tall */
+    border-radius:4px;
+  }
+  #pname{font-size:17px;margin-bottom:3px}
+  /* hide notes on mobile — too much text */
+  #pnotes{display:none}
+  #pmeta{
+    padding-top:7px;
+    font-size:9px;
+    gap:8px;
+  }
+
+  /* explore button: above the card */
+  #explore-btn{
+    bottom:10px;
+    font-size:9px;
+    padding:9px 22px;
+    letter-spacing:.16em;
+  }
+
+  /* dots: just above explore button */
+  #dots{
+    bottom:auto;
+    top:auto;
+    position:absolute;
+    bottom:88px;          /* sit above card */
+    left:50%;
+    transform:translateX(-50%);
+  }
+}
+
+/* TABLET 601–768px */
+@media(min-width:601px) and (max-width:768px){
+  .side-bottle{display:none}
+  #bottom-tag{display:none}
+
+  #btn-prev{left:8px}
+  #btn-next{right:8px}
+
+  .bottle-img{width:clamp(140px,25vw,200px)}
+  .ped-tier.t1{width:clamp(150px,28vw,200px);height:16px}
+  .ped-tier.t2{width:clamp(120px,22vw,162px);height:13px}
+  .ped-tier.t3{width:clamp(90px,17vw,124px);height:10px}
+
+  #product-card{left:16px;bottom:56px;padding:13px 16px;min-width:185px}
+  #pname{font-size:18px}
+  #pnotes{font-size:9px}
+  #explore-btn{bottom:14px;font-size:10px;padding:11px 28px}
+}
 
 /* ═══════════════════════════════════════════════
    MARQUEE
@@ -690,7 +801,7 @@ footer{
   </div>
 
   <a href="#collection" id="explore-btn">Explorar Ahora</a>
-  <div id="bottom-tag">· Haute Parfumerie</div>
+  <div id="bottom-tag">CDMX · Haute Parfumerie</div>
 
   <div id="dots">
     <button class="dot active" aria-label="Slide 1"></button>
