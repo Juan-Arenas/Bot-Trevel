@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════
-   RESET & BASE
+   RESET & VARIABLES
 ═══════════════════════════════════════════════ */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -16,22 +16,25 @@
   --gold-light:#e8d5a3;
   --gold-bright:#f5e6b8;
   --gold-dim:rgba(201,169,110,.18);
-  --bg:#06080f;
-  --navy:#080d1e;
-  --navy2:#0a1228;
+  /* BLACK PALETTE — brand identity */
+  --bg:#080808;
+  --bg2:#0e0e0e;
+  --bg3:#141414;
+  --bg4:#1a1a1a;
+  --surface:rgba(255,255,255,.04);
+  --surface2:rgba(255,255,255,.07);
+  --border:rgba(255,255,255,.08);
+  --border-gold:rgba(201,169,110,.2);
   --text:#f0ece3;
-  --muted:rgba(240,236,227,.48);
-  --bronze-ped:#2a1a08;
-  --bronze-mid:#3d2610;
-  --bronze-hi:#6b4520;
+  --muted:rgba(240,236,227,.45);
+  --muted2:rgba(240,236,227,.28);
+  /* Bronze pedestal */
+  --ped-hi:#6b4520;
+  --ped-mid:#3d2610;
+  --ped-lo:#2a1a08;
 }
 html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Jost',sans-serif;
-  overflow-x:hidden;
-}
+body{background:var(--bg);color:var(--text);font-family:'Jost',sans-serif;overflow-x:hidden}
 
 /* ═══════════════════════════════════════════════
    NAV
@@ -39,20 +42,24 @@ body{
 nav{
   position:fixed;top:0;left:0;right:0;z-index:900;
   display:flex;align-items:center;justify-content:space-between;
-  padding:22px 52px;
-  background:linear-gradient(to bottom,rgba(6,8,15,.95) 0%,rgba(6,8,15,.6) 60%,transparent 100%);
+  padding:20px 52px;
+  background:linear-gradient(to bottom,rgba(8,8,8,.98) 0%,rgba(8,8,8,.7) 60%,transparent 100%);
 }
 .nav-logo{
+  display:flex;align-items:center;gap:12px;
+}
+.nav-logo img{height:36px;width:auto;object-fit:contain;filter:brightness(1.1)}
+.nav-logo-text{
   font-family:'Cormorant Garamond',serif;
-  font-size:15px;font-weight:300;letter-spacing:.35em;text-transform:uppercase;
+  font-size:14px;font-weight:300;letter-spacing:.3em;text-transform:uppercase;
   color:var(--text);
 }
 .nav-links{
-  display:flex;gap:38px;list-style:none;
-  background:rgba(255,255,255,.05);
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,.09);
-  padding:10px 30px;border-radius:50px;
+  display:flex;gap:36px;list-style:none;
+  background:rgba(255,255,255,.04);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid var(--border);
+  padding:10px 28px;border-radius:50px;
 }
 .nav-links a{
   color:var(--muted);text-decoration:none;
@@ -60,15 +67,9 @@ nav{
   transition:color .3s;
 }
 .nav-links a:hover{color:var(--gold)}
-.nav-right{
-  display:flex;align-items:center;gap:22px;
-  font-size:11px;font-weight:300;letter-spacing:.16em;color:var(--muted);
-}
+.nav-right{display:flex;align-items:center;gap:20px;font-size:11px;font-weight:300;letter-spacing:.16em;color:var(--muted)}
 .nav-cart{cursor:pointer;transition:color .3s}.nav-cart:hover{color:var(--gold)}
-@media(max-width:768px){
-  .nav-links{display:none}
-  nav{padding:18px 20px}
-}
+@media(max-width:768px){.nav-links{display:none}nav{padding:16px 20px}}
 
 /* ═══════════════════════════════════════════════
    HERO
@@ -76,59 +77,56 @@ nav{
 #hero{
   position:relative;width:100%;
   height:100vh;height:100dvh;
-  overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;display:flex;align-items:center;justify-content:center;
 }
 
-/* Deep navy background */
+/* Pure black gradient bg */
 #hero-bg{
   position:absolute;inset:0;z-index:0;
   background:
-    radial-gradient(ellipse 90% 80% at 50% 70%, #0e1f45 0%, #080d1e 40%, #06080f 100%);
+    radial-gradient(ellipse 80% 70% at 50% 65%, #1a1208 0%, #0d0d0d 40%, #080808 100%);
 }
-
-/* Top vignette */
 #hero-bg::after{
   content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(6,8,15,.7),transparent);
+  background:radial-gradient(ellipse 50% 35% at 50% 0%,rgba(8,8,8,.8),transparent);
 }
 
-/* Spotlight cone from top center */
+/* Spotlight — warm gold on black */
 #spotlight{
   position:absolute;
   top:-5%;left:50%;transform:translateX(-50%);
-  width:min(700px,95vw);height:100%;
+  width:min(650px,95vw);height:100%;
   background:conic-gradient(
     from 180deg at 50% 0%,
-    transparent            72deg,
-    rgba(201,169,110,.06)  86deg,
-    rgba(201,169,110,.16)  93deg,
-    rgba(220,180,100,.22)  100deg,
-    rgba(201,169,110,.16)  107deg,
-    rgba(201,169,110,.06)  114deg,
-    transparent            128deg
+    transparent            74deg,
+    rgba(201,169,110,.05)  88deg,
+    rgba(201,169,110,.15)  95deg,
+    rgba(220,180,100,.2)   100deg,
+    rgba(201,169,110,.15)  105deg,
+    rgba(201,169,110,.05)  112deg,
+    transparent            126deg
   );
   z-index:1;pointer-events:none;
   animation:spotBreath 7s ease-in-out infinite;
 }
-@keyframes spotBreath{0%,100%{opacity:.8}50%{opacity:1}}
+@keyframes spotBreath{0%,100%{opacity:.7}50%{opacity:1}}
 
-/* Subtle noise grain overlay */
+/* Grain */
 #grain{
-  position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.028;
+  position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.025;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size:200px;
 }
 
-/* Animated silk ribbon */
+/* Silk ribbon — gold on black, gorgeous */
 #silk{
   position:absolute;bottom:22%;left:50%;transform:translateX(-50%);
   width:115%;z-index:3;pointer-events:none;
   animation:silkFloat 8s ease-in-out infinite;
 }
-@keyframes silkFloat{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-6px)}}
+@keyframes silkFloat{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-5px)}}
 
-/* Brand text — giant, behind bottle */
+/* Brand name — pure white on black */
 #brand-text{
   position:absolute;
   top:50%;left:50%;transform:translate(-50%,-50%);
@@ -136,14 +134,12 @@ nav{
   font-size:clamp(64px,12.5vw,185px);
   font-weight:300;letter-spacing:-.01em;
   color:rgba(240,236,227,.88);
-  white-space:nowrap;
-  z-index:4;pointer-events:none;user-select:none;
-  text-shadow:0 2px 80px rgba(201,169,110,.1);
-  /* slight parallax on mouse */
+  white-space:nowrap;z-index:4;pointer-events:none;user-select:none;
+  text-shadow:0 2px 60px rgba(201,169,110,.08);
   transition:transform .08s ease;
 }
 
-/* ── CAROUSEL ────────────────────────── */
+/* ── CAROUSEL ────────────────────── */
 #carousel{
   position:absolute;inset:0;z-index:5;
   display:flex;align-items:flex-end;justify-content:center;
@@ -154,120 +150,105 @@ nav{
   opacity:0;
   transition:opacity 1s cubic-bezier(.4,0,.2,1);
   pointer-events:none;
-  padding-bottom:0;
 }
 .slide.active{opacity:1;pointer-events:all}
 
-/* Pedestal + bottle container */
 .pedestal-wrap{
   position:relative;
   display:flex;flex-direction:column;align-items:center;
-  z-index:6;
-  bottom:0;
+  z-index:6;bottom:0;
 }
 
-/* 3-tier pedestal drawn via CSS */
+/* 3D bottle effect via CSS */
+.bottle-stage{
+  position:relative;
+  perspective:800px;
+}
+.bottle-img{
+  width:clamp(160px,18vw,270px);
+  height:auto;display:block;
+  filter:
+    drop-shadow(0 -12px 55px rgba(201,169,110,.3))
+    drop-shadow(0 35px 70px rgba(0,0,0,.98))
+    drop-shadow(-8px 0 20px rgba(0,0,0,.6))
+    drop-shadow(8px 0 20px rgba(0,0,0,.6));
+  transform-style:preserve-3d;
+}
+.slide.active .bottle-img{
+  animation:bottleFloat3D 5s ease-in-out infinite;
+}
+@keyframes bottleFloat3D{
+  0%  {transform:translateY(0)    rotateY(0deg)}
+  25% {transform:translateY(-8px) rotateY(2deg)}
+  50% {transform:translateY(-12px)rotateY(0deg)}
+  75% {transform:translateY(-8px) rotateY(-2deg)}
+  100%{transform:translateY(0)    rotateY(0deg)}
+}
+
+/* Pedestal — 3 tiers */
 .pedestal{
   position:relative;
   display:flex;flex-direction:column;align-items:center;
-  margin-top:auto;
 }
 .ped-tier{
-  background:linear-gradient(to bottom, var(--bronze-hi) 0%, var(--bronze-mid) 40%, var(--bronze-ped) 100%);
-  border-radius:3px 3px 0 0;
-  position:relative;
+  background:linear-gradient(to bottom,var(--ped-hi) 0%,var(--ped-mid) 45%,var(--ped-lo) 100%);
+  border-radius:3px 3px 0 0;position:relative;
+  box-shadow:0 4px 12px rgba(0,0,0,.8), inset 0 1px 0 rgba(255,210,120,.15);
 }
 .ped-tier::before{
-  content:'';position:absolute;top:0;left:4px;right:4px;height:6px;
-  background:linear-gradient(to right,var(--bronze-mid),var(--bronze-hi),var(--bronze-mid));
+  content:'';position:absolute;top:0;left:4px;right:4px;height:5px;
+  background:linear-gradient(to right,rgba(255,200,100,.12),rgba(255,220,140,.3),rgba(255,200,100,.12));
   border-radius:2px 2px 0 0;
 }
-/* Desktop pedestal sizes */
-.ped-tier.t1{width:clamp(180px,22vw,280px);height:clamp(18px,2.2vw,28px)}
-.ped-tier.t2{width:clamp(145px,17vw,220px);height:clamp(15px,1.8vw,22px)}
-.ped-tier.t3{width:clamp(110px,13vw,165px);height:clamp(12px,1.4vw,18px)}
-
+.ped-tier.t1{width:clamp(180px,22vw,285px);height:clamp(18px,2.2vw,28px)}
+.ped-tier.t2{width:clamp(144px,17.5vw,228px);height:clamp(15px,1.8vw,22px)}
+.ped-tier.t3{width:clamp(108px,13vw,170px);height:clamp(12px,1.4vw,18px)}
 .pedestal::after{
   content:'';position:absolute;
   bottom:-2px;left:50%;transform:translateX(-50%);
-  width:120%;height:30px;
-  background:radial-gradient(ellipse 80% 100% at 50% 100%, rgba(201,169,110,.18), transparent);
+  width:130%;height:28px;
+  background:radial-gradient(ellipse 80% 100% at 50% 100%,rgba(201,169,110,.22),transparent);
   pointer-events:none;
 }
 
-/* bottle image — desktop */
-.bottle-img{
-  width:clamp(160px,18vw,260px);
-  height:auto;
-  display:block;
-  margin-bottom:0;
-  filter:drop-shadow(0 -10px 50px rgba(201,169,110,.25))
-         drop-shadow(0 30px 60px rgba(0,0,0,.95));
-}
-.slide.active .bottle-img{
-  animation:bottleFloat 5s ease-in-out infinite;
-}
-@keyframes bottleFloat{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-10px)}
-}
-
-/* Side bottles — desktop only */
+/* Side bottles */
 .side-bottle{
   position:absolute;bottom:8%;
   width:clamp(70px,8vw,115px);
-  opacity:.38;
-  filter:blur(8px) brightness(.5) saturate(.7);
+  opacity:.35;
+  filter:blur(9px) brightness(.45) saturate(.6);
   transition:opacity .8s;
-  pointer-events:none;
-  z-index:4;
+  pointer-events:none;z-index:4;
 }
-.side-bottle.left{left:4%}
-.side-bottle.right{right:4%}
+.side-bottle.left{left:4%}.side-bottle.right{right:4%}
 
-/* ── CAROUSEL NAV ARROWS ─────────────── */
+/* Arrows */
 .arrow-btn{
   position:absolute;top:50%;transform:translateY(-50%);
-  z-index:10;
-  width:38px;height:38px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:50%;
-  color:var(--muted);
+  z-index:10;width:38px;height:38px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:50%;color:var(--muted);
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
-  backdrop-filter:blur(8px);
-  transition:all .3s;
+  cursor:pointer;backdrop-filter:blur(8px);transition:all .3s;
 }
 .arrow-btn:hover{
-  background:rgba(201,169,110,.14);
-  border-color:rgba(201,169,110,.45);
-  color:var(--gold);
-  box-shadow:0 0 20px rgba(201,169,110,.1);
+  background:rgba(201,169,110,.12);border-color:rgba(201,169,110,.45);
+  color:var(--gold);box-shadow:0 0 20px rgba(201,169,110,.1);
 }
-/* Desktop arrow positions */
 #btn-prev{left:44%}#btn-next{right:44%}
 
-/* ── PRODUCT CARD — desktop ──────────── */
+/* Product card */
 #product-card{
-  position:absolute;bottom:28px;left:48px;
-  z-index:10;
-  background:rgba(6,8,15,.68);
-  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  border:1px solid rgba(201,169,110,.22);
-  border-radius:3px;
-  padding:18px 22px;
-  min-width:215px;
-  transform:translateY(0);
-  opacity:1;
-  transition:opacity .5s ease, transform .5s ease;
+  position:absolute;bottom:28px;left:48px;z-index:10;
+  background:rgba(8,8,8,.75);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border-gold);
+  border-radius:3px;padding:18px 22px;min-width:215px;
+  transition:opacity .5s ease,transform .5s ease;
 }
 #product-card.switching{opacity:0;transform:translateY(6px)}
-#pname{
-  font-family:'Cormorant Garamond',serif;
-  font-size:22px;font-weight:400;letter-spacing:.06em;
-  margin-bottom:5px;
-}
+#pname{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;letter-spacing:.06em;margin-bottom:5px}
 #pnotes{font-size:10px;font-weight:300;letter-spacing:.07em;color:var(--muted);line-height:1.75;margin-bottom:11px}
 #pmeta{
   display:flex;justify-content:space-between;align-items:center;
@@ -275,162 +256,62 @@ nav{
   border-top:1px solid rgba(201,169,110,.14);padding-top:9px;gap:12px;
 }
 
-/* ── EXPLORE BUTTON — desktop ────────── */
+/* Explore btn */
 #explore-btn{
   position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
   z-index:10;
-  background:rgba(255,255,255,.055);
-  border:1px solid rgba(255,255,255,.2);
-  color:var(--text);
-  font-family:'Jost',sans-serif;font-size:11px;font-weight:300;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.18);
+  color:var(--text);font-family:'Jost',sans-serif;font-size:11px;font-weight:300;
   letter-spacing:.22em;text-transform:uppercase;
-  padding:13px 36px;border-radius:50px;
-  text-decoration:none;
-  backdrop-filter:blur(12px);
-  transition:all .35s;
-  white-space:nowrap;
+  padding:13px 36px;border-radius:50px;text-decoration:none;
+  backdrop-filter:blur(12px);transition:all .35s;white-space:nowrap;
 }
 #explore-btn:hover{
-  background:rgba(201,169,110,.14);
-  border-color:rgba(201,169,110,.5);
-  color:var(--gold);
-  box-shadow:0 0 30px rgba(201,169,110,.12);
+  background:rgba(201,169,110,.12);border-color:rgba(201,169,110,.45);
+  color:var(--gold);box-shadow:0 0 30px rgba(201,169,110,.1);
 }
-
-/* ── BOTTOM TAG ───────────────────────── */
 #bottom-tag{
   position:absolute;bottom:38px;right:50px;z-index:10;
   font-size:10px;font-weight:300;letter-spacing:.28em;color:var(--muted);text-transform:uppercase;
 }
-
-/* ── DOTS ─────────────────────────────── */
 #dots{
   position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
   z-index:10;display:flex;gap:8px;align-items:center;
 }
 .dot{
   width:5px;height:5px;border-radius:50%;
-  background:rgba(201,169,110,.3);cursor:pointer;
+  background:rgba(201,169,110,.28);cursor:pointer;
   transition:all .35s;border:none;padding:0;
 }
 .dot.active{background:var(--gold);width:22px;border-radius:3px}
-.dot:hover{background:rgba(201,169,110,.65)}
 
-/* ════════════════════════════════════════
-   MOBILE HERO — complete override ≤600px
-════════════════════════════════════════ */
+/* ── MOBILE ≤600px ─── */
 @media(max-width:600px){
-
-  /* hide desktop side bottles & bottom-tag */
   .side-bottle{display:none}
   #bottom-tag{display:none}
-
-  /* brand text smaller so it doesn't overflow */
-  #brand-text{
-    font-size:clamp(44px,13vw,72px);
-    letter-spacing:-.01em;
-    white-space:nowrap;
-    top:50%;
-  }
-
-  /* hero layout: bottle+pedestal centered, arrows flanking */
-  #hero{
-    /* allow internal scroll if needed — keep hidden */
-    overflow:hidden;
-  }
-
-  /* arrows: fixed to left/right edges, vertically centered on bottle zone */
-  #btn-prev{
-    left:6px;
-    top:42%;           /* align with bottle center */
-    transform:translateY(-50%);
-    width:34px;height:34px;
-  }
-  #btn-next{
-    right:6px;
-    top:42%;
-    transform:translateY(-50%);
-    width:34px;height:34px;
-  }
-
-  /* carousel slides: center bottle between the two arrows */
-  .slide{
-    align-items:center;          /* vertically center */
-    justify-content:center;
-    padding-bottom:0;
-    /* leave room for arrows on both sides */
-    padding-left:52px;
-    padding-right:52px;
-    /* bottle sits at 35% from top, pedestal reaches bottom */
-    align-items:flex-end;
-    padding-bottom:clamp(120px,30vw,160px); /* space for card below */
-  }
-
-  /* bottle image: responsive to the 52px-padded zone */
-  .bottle-img{
-    width:clamp(110px,38vw,180px);
-    filter:drop-shadow(0 -6px 30px rgba(201,169,110,.3))
-           drop-shadow(0 16px 40px rgba(0,0,0,.95));
-  }
-
-  /* pedestal tiers: scale down for mobile */
+  #brand-text{font-size:clamp(44px,13vw,72px)}
+  #btn-prev{left:6px;top:42%;width:34px;height:34px}
+  #btn-next{right:6px;top:42%;width:34px;height:34px}
+  .slide{align-items:flex-end;padding-left:52px;padding-right:52px;padding-bottom:clamp(120px,30vw,160px)}
+  .bottle-img{width:clamp(110px,38vw,180px)}
   .ped-tier.t1{width:clamp(120px,36vw,160px);height:14px}
   .ped-tier.t2{width:clamp(96px,29vw,128px);height:11px}
   .ped-tier.t3{width:clamp(72px,22vw,100px);height:9px}
-
-  /* product card: compact pill at bottom, full width */
-  #product-card{
-    position:absolute;
-    bottom:44px;left:12px;right:12px;
-    min-width:unset;
-    padding:12px 15px;
-    /* make it less tall */
-    border-radius:4px;
-  }
-  #pname{font-size:17px;margin-bottom:3px}
-  /* hide notes on mobile — too much text */
-  #pnotes{display:none}
-  #pmeta{
-    padding-top:7px;
-    font-size:9px;
-    gap:8px;
-  }
-
-  /* explore button: above the card */
-  #explore-btn{
-    bottom:10px;
-    font-size:9px;
-    padding:9px 22px;
-    letter-spacing:.16em;
-  }
-
-  /* dots: just above explore button */
-  #dots{
-    bottom:auto;
-    top:auto;
-    position:absolute;
-    bottom:88px;          /* sit above card */
-    left:50%;
-    transform:translateX(-50%);
-  }
+  #product-card{position:absolute;bottom:44px;left:12px;right:12px;min-width:unset;padding:12px 15px}
+  #pname{font-size:17px}#pnotes{display:none}
+  #pmeta{padding-top:7px;font-size:9px}
+  #explore-btn{bottom:10px;font-size:9px;padding:9px 22px}
+  #dots{bottom:88px}
 }
-
-/* TABLET 601–768px */
 @media(min-width:601px) and (max-width:768px){
-  .side-bottle{display:none}
-  #bottom-tag{display:none}
-
-  #btn-prev{left:8px}
-  #btn-next{right:8px}
-
+  .side-bottle{display:none}#bottom-tag{display:none}
+  #btn-prev{left:8px}#btn-next{right:8px}
   .bottle-img{width:clamp(140px,25vw,200px)}
   .ped-tier.t1{width:clamp(150px,28vw,200px);height:16px}
   .ped-tier.t2{width:clamp(120px,22vw,162px);height:13px}
   .ped-tier.t3{width:clamp(90px,17vw,124px);height:10px}
-
   #product-card{left:16px;bottom:56px;padding:13px 16px;min-width:185px}
-  #pname{font-size:18px}
-  #pnotes{font-size:9px}
+  #pname{font-size:18px}#pnotes{font-size:9px}
   #explore-btn{bottom:14px;font-size:10px;padding:11px 28px}
 }
 
@@ -438,154 +319,133 @@ nav{
    MARQUEE
 ═══════════════════════════════════════════════ */
 .marquee-strip{
-  border-top:1px solid rgba(201,169,110,.12);
-  border-bottom:1px solid rgba(201,169,110,.12);
-  padding:14px 0;overflow:hidden;white-space:nowrap;
-  background:rgba(201,169,110,.022);
+  border-top:1px solid rgba(201,169,110,.1);border-bottom:1px solid rgba(201,169,110,.1);
+  padding:14px 0;overflow:hidden;white-space:nowrap;background:rgba(201,169,110,.018);
 }
 .marquee-inner{display:inline-flex;animation:marq 24s linear infinite}
 .marquee-inner.rev{animation-direction:reverse}
-.mi{
-  display:inline-flex;align-items:center;gap:16px;
-  margin-right:32px;
-  font-size:10px;font-weight:300;letter-spacing:.28em;
-  color:var(--muted);text-transform:uppercase;
-}
+.mi{display:inline-flex;align-items:center;gap:16px;margin-right:32px;font-size:10px;font-weight:300;letter-spacing:.28em;color:var(--muted);text-transform:uppercase}
 .mdot{width:4px;height:4px;background:var(--gold);transform:rotate(45deg);flex-shrink:0}
 @keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* ═══════════════════════════════════════════════
-   COLLECTION SECTION
+   COLLECTION
 ═══════════════════════════════════════════════ */
 #collection{background:var(--bg);padding:110px 52px 100px}
 @media(max-width:768px){#collection{padding:80px 20px}}
 
-.section-eyebrow{
-  font-size:10px;font-weight:300;letter-spacing:.35em;
-  color:var(--gold);text-transform:uppercase;margin-bottom:14px;
-}
-.section-heading{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(34px,5vw,62px);font-weight:300;
-  line-height:1.08;margin-bottom:58px;max-width:460px;
-}
+.section-eyebrow{font-size:10px;font-weight:300;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;margin-bottom:14px}
+.section-heading{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,5vw,62px);font-weight:300;line-height:1.08;margin-bottom:58px;max-width:460px}
 .section-heading em{font-style:italic;color:var(--gold-light)}
 
-.coll-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
-}
+.coll-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
 @media(max-width:768px){.coll-grid{grid-template-columns:1fr;gap:3px}}
 
 .coll-card{
-  position:relative;overflow:hidden;
-  aspect-ratio:3/4;background:#0a0c15;cursor:pointer;
+  position:relative;overflow:hidden;aspect-ratio:3/4;
+  background:var(--bg2);cursor:pointer;
 }
-.coll-card::after{/* gradient overlay */
+.coll-card::after{
   content:'';position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(6,8,15,.96) 0%,rgba(6,8,15,.35) 48%,rgba(6,8,15,.08) 100%);
+  background:linear-gradient(to top,rgba(8,8,8,.97) 0%,rgba(8,8,8,.4) 50%,rgba(8,8,8,.1) 100%);
   z-index:2;transition:opacity .5s;
 }
-.coll-card:hover::after{opacity:.75}
-
-.coll-bg{
-  position:absolute;inset:0;z-index:1;overflow:hidden;
-  transition:transform .75s cubic-bezier(.4,0,.2,1);
-}
+.coll-card:hover::after{opacity:.72}
+.coll-bg{position:absolute;inset:0;z-index:1;overflow:hidden;transition:transform .75s cubic-bezier(.4,0,.2,1)}
 .coll-card:hover .coll-bg{transform:scale(1.07)}
+.coll-bg img{width:100%;height:100%;object-fit:cover;object-position:center center}
+.coll-bg::after{content:none}
 
-.coll-bg img{width:100%;height:100%;object-fit:contain;object-position:center 60%;padding:15% 20% 5%}
+.coll-bg-noir{background:#0a0804}
+.coll-bg-dark{background:#080808}
+.coll-bg-teal{background:#060d12}
 
-/* Atmospheric bg per card */
-.coll-bg-noir {background:radial-gradient(ellipse at 50% 35%,#201408 0%,#0e0804 50%,#060402 100%)}
-.coll-bg-blue {background:radial-gradient(ellipse at 50% 35%,#0d1f40 0%,#070f20 50%,#040810 100%)}
-.coll-bg-ambre{background:radial-gradient(ellipse at 50% 35%,#2a1202 0%,#160901 50%,#080400 100%)}
-
-/* card spotlight */
-.coll-bg::after{
-  content:'';position:absolute;top:-20%;left:50%;transform:translateX(-50%);
-  width:60%;height:70%;
-  background:conic-gradient(from 180deg at 50% 0%,transparent 70deg,rgba(201,169,110,.12) 90deg,rgba(201,169,110,.22) 100deg,rgba(201,169,110,.12) 110deg,transparent 130deg);
-  z-index:1;pointer-events:none;
-}
-
-.coll-info{
-  position:absolute;bottom:0;left:0;right:0;z-index:3;padding:24px 22px;
-}
+.coll-info{position:absolute;bottom:0;left:0;right:0;z-index:3;padding:24px 22px}
 .coll-num{font-size:9px;letter-spacing:.32em;color:var(--gold);margin-bottom:7px}
 .coll-name{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;margin-bottom:5px}
 .coll-notes{font-size:10px;font-weight:300;letter-spacing:.05em;color:var(--muted);line-height:1.65}
-.coll-price{
-  font-size:11px;letter-spacing:.1em;color:var(--gold-light);
-  margin-top:12px;display:flex;align-items:center;gap:10px;
-}
+.coll-price{font-size:11px;letter-spacing:.1em;color:var(--gold-light);margin-top:12px;display:flex;align-items:center;gap:10px}
 .coll-price::before{content:'';flex:1;height:1px;background:rgba(201,169,110,.2)}
 
-/* ── ADD TO CART HOVER ─────────────────── */
 .coll-btn{
   position:absolute;top:18px;right:18px;z-index:4;
-  background:rgba(6,8,15,.7);backdrop-filter:blur(10px);
+  background:rgba(8,8,8,.8);backdrop-filter:blur(10px);
   border:1px solid rgba(201,169,110,.25);border-radius:2px;
-  color:var(--gold);font-family:'Jost',sans-serif;
-  font-size:9px;letter-spacing:.2em;text-transform:uppercase;
-  padding:8px 14px;cursor:pointer;
-  opacity:0;transform:translateY(-6px);
-  transition:all .35s;
+  color:var(--gold);font-family:'Jost',sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  padding:8px 14px;cursor:pointer;opacity:0;transform:translateY(-6px);transition:all .35s;
 }
 .coll-card:hover .coll-btn{opacity:1;transform:translateY(0)}
-.coll-btn:hover{background:rgba(201,169,110,.15);border-color:var(--gold)}
 
 /* ═══════════════════════════════════════════════
-   FEATURED / SPLIT SECTION
+   ALVAREZ SECTION (ex "La Maison")
 ═══════════════════════════════════════════════ */
-#featured{
+#alvarez{
   display:grid;grid-template-columns:1fr 1fr;
-  min-height:70vh;
+  min-height:75vh;
 }
-@media(max-width:768px){#featured{grid-template-columns:1fr}}
+@media(max-width:768px){#alvarez{grid-template-columns:1fr}}
 
-.feat-visual{
-  position:relative;overflow:hidden;background:var(--navy2);
-  min-height:400px;
+.alv-visual{
+  position:relative;overflow:hidden;background:var(--bg2);
+  min-height:420px;display:flex;align-items:center;justify-content:center;
 }
-.feat-visual canvas{width:100%;height:100%;display:block}
-.feat-visual-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(6,8,15,.1),rgba(6,8,15,.5));
+
+/* Luxury black + silhouette canvas background */
+.alv-canvas-bg{position:absolute;inset:0;z-index:0}
+.alv-canvas-bg canvas{width:100%;height:100%;display:block}
+
+/* Logo centered over the visual */
+.alv-logo-container{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;
+  padding:40px;
+}
+.alv-logo-img{
+  width:min(220px,65%);
+  height:auto;
+  filter:
+    drop-shadow(0 0 30px rgba(201,169,110,.35))
+    drop-shadow(0 0 80px rgba(201,169,110,.15))
+    brightness(1.05);
+  animation:logoGlow 4s ease-in-out infinite;
+}
+@keyframes logoGlow{
+  0%,100%{filter:drop-shadow(0 0 30px rgba(201,169,110,.35)) drop-shadow(0 0 80px rgba(201,169,110,.12)) brightness(1.05)}
+  50%    {filter:drop-shadow(0 0 45px rgba(201,169,110,.55)) drop-shadow(0 0 100px rgba(201,169,110,.22)) brightness(1.12)}
+}
+.alv-logo-sub{font-size:10px;font-weight:300;letter-spacing:.45em;color:var(--gold);text-transform:uppercase}
+
+.alv-visual-overlay{
+  position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to right,transparent 60%,rgba(8,8,8,.6) 100%);
   pointer-events:none;
 }
 
-.feat-text{
-  background:var(--navy);
+.alv-text{
+  background:var(--bg3);
   display:flex;flex-direction:column;justify-content:center;
-  padding:80px 60px;
+  padding:80px 64px;
 }
-@media(max-width:768px){.feat-text{padding:50px 24px}}
+@media(max-width:768px){.alv-text{padding:50px 24px}}
 
-.feat-quote{
+.alv-quote{
   font-family:'Cormorant Garamond',serif;
   font-size:clamp(26px,3.2vw,44px);
-  font-weight:300;font-style:italic;line-height:1.42;
-  margin-bottom:30px;
+  font-weight:300;font-style:italic;line-height:1.42;margin-bottom:30px;
 }
-.feat-body{
-  font-size:12px;font-weight:300;letter-spacing:.04em;
-  color:var(--muted);line-height:2.1;margin-bottom:38px;
-}
-.feat-divider{
-  width:40px;height:1px;background:var(--gold);
-  margin-bottom:24px;
-}
+.alv-body{font-size:12px;font-weight:300;letter-spacing:.04em;color:var(--muted);line-height:2.1;margin-bottom:38px}
+.alv-divider{width:40px;height:1px;background:var(--gold);margin-bottom:24px}
+
 .btn-ghost{
   display:inline-flex;align-items:center;gap:12px;
-  border:1px solid rgba(201,169,110,.38);color:var(--gold);
+  border:1px solid rgba(201,169,110,.35);color:var(--gold);
   font-family:'Jost',sans-serif;font-size:10px;font-weight:300;
   letter-spacing:.25em;text-transform:uppercase;
-  padding:13px 28px;text-decoration:none;
-  transition:all .3s;width:fit-content;
+  padding:13px 28px;text-decoration:none;transition:all .3s;width:fit-content;
 }
-.btn-ghost:hover{background:rgba(201,169,110,.08);border-color:var(--gold)}
-.btn-ghost svg{transition:transform .3s}
-.btn-ghost:hover svg{transform:translateX(4px)}
+.btn-ghost:hover{background:rgba(201,169,110,.07);border-color:var(--gold)}
+.btn-ghost svg{transition:transform .3s}.btn-ghost:hover svg{transform:translateX(4px)}
 
 /* ═══════════════════════════════════════════════
    STATS BAR
@@ -594,91 +454,128 @@ nav{
   display:grid;grid-template-columns:repeat(4,1fr);
   border-top:1px solid rgba(201,169,110,.1);
   border-bottom:1px solid rgba(201,169,110,.1);
+  background:var(--bg2);
 }
 @media(max-width:600px){#stats{grid-template-columns:repeat(2,1fr)}}
-.stat{
-  padding:44px 32px;text-align:center;
-  border-right:1px solid rgba(201,169,110,.08);
-  transition:background .3s;
-}
+.stat{padding:44px 32px;text-align:center;border-right:1px solid rgba(201,169,110,.07);transition:background .3s}
 .stat:last-child{border-right:none}
 .stat:hover{background:rgba(201,169,110,.03)}
-.stat-num{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(36px,5vw,56px);font-weight:300;
-  color:var(--gold);line-height:1;margin-bottom:8px;
-}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,5vw,56px);font-weight:300;color:var(--gold);line-height:1;margin-bottom:8px}
 .stat-label{font-size:10px;font-weight:300;letter-spacing:.25em;color:var(--muted);text-transform:uppercase}
+
+/* ═══════════════════════════════════════════════
+   CONTACT SECTION
+═══════════════════════════════════════════════ */
+#contacto{
+  background:var(--bg);padding:100px 52px;
+}
+@media(max-width:768px){#contacto{padding:80px 20px}}
+
+.contact-header{text-align:center;margin-bottom:70px}
+.contact-header .section-eyebrow{display:block;margin-bottom:14px}
+.contact-header h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(36px,5vw,62px);font-weight:300;
+  margin-bottom:16px;
+}
+.contact-header p{font-size:12px;font-weight:300;color:var(--muted);letter-spacing:.05em;line-height:1.9;max-width:420px;margin:0 auto}
+
+.contact-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:20px;
+  max-width:820px;margin:0 auto;
+}
+@media(max-width:600px){.contact-grid{grid-template-columns:1fr}}
+
+.contact-card{
+  position:relative;overflow:hidden;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:4px;padding:36px 32px;
+  text-decoration:none;color:var(--text);
+  display:flex;flex-direction:column;gap:14px;
+  transition:all .4s cubic-bezier(.4,0,.2,1);
+  cursor:pointer;
+}
+.contact-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(201,169,110,.06),transparent);
+  opacity:0;transition:opacity .4s;
+}
+.contact-card:hover{
+  border-color:rgba(201,169,110,.38);
+  transform:translateY(-4px);
+  box-shadow:0 20px 50px rgba(0,0,0,.6), 0 0 0 1px rgba(201,169,110,.1);
+}
+.contact-card:hover::before{opacity:1}
+
+.contact-icon{
+  width:52px;height:52px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.contact-icon.wpp{background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25)}
+.contact-icon.tiktok{background:rgba(255,255,255,.06);border:1px solid var(--border)}
+
+.contact-label{font-size:10px;font-weight:300;letter-spacing:.3em;color:var(--gold);text-transform:uppercase}
+.contact-name{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;letter-spacing:.03em}
+.contact-detail{font-size:12px;font-weight:300;letter-spacing:.05em;color:var(--muted);line-height:1.7}
+.contact-action{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);margin-top:6px;
+  transition:gap .3s;
+}
+.contact-card:hover .contact-action{gap:14px}
 
 /* ═══════════════════════════════════════════════
    FOOTER
 ═══════════════════════════════════════════════ */
-footer{
-  background:var(--navy);
-  border-top:1px solid rgba(255,255,255,.06);
-}
+footer{background:var(--bg2);border-top:1px solid rgba(255,255,255,.05)}
 .footer-top{
   display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr;gap:48px;
   padding:72px 52px 56px;
 }
 @media(max-width:768px){.footer-top{grid-template-columns:1fr;padding:48px 20px 36px;gap:36px}}
-
-.footer-brand-name{
-  font-family:'Cormorant Garamond',serif;
-  font-size:20px;font-weight:300;letter-spacing:.3em;
-  text-transform:uppercase;margin-bottom:16px;
-}
+.footer-logo{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.footer-logo img{height:32px;width:auto;object-fit:contain}
+.footer-brand-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;letter-spacing:.3em;text-transform:uppercase}
 .footer-tagline{font-size:11px;font-weight:300;letter-spacing:.06em;color:var(--muted);line-height:1.85;max-width:220px}
-
-.footer-col-title{
-  font-size:9px;font-weight:400;letter-spacing:.35em;
-  color:var(--gold);text-transform:uppercase;margin-bottom:20px;
-}
+.footer-col-title{font-size:9px;font-weight:400;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;margin-bottom:20px}
 .footer-links{list-style:none;display:flex;flex-direction:column;gap:11px}
-.footer-links a{
-  font-size:12px;font-weight:300;letter-spacing:.06em;color:var(--muted);
-  text-decoration:none;transition:color .3s;
-}
+.footer-links a{font-size:12px;font-weight:300;letter-spacing:.06em;color:var(--muted);text-decoration:none;transition:color .3s}
 .footer-links a:hover{color:var(--gold-light)}
-
 .footer-bottom{
-  border-top:1px solid rgba(255,255,255,.05);
-  padding:22px 52px;
+  border-top:1px solid rgba(255,255,255,.04);padding:22px 52px;
   display:flex;align-items:center;justify-content:space-between;
-  font-size:10px;font-weight:300;letter-spacing:.12em;color:var(--muted);
+  font-size:10px;font-weight:300;letter-spacing:.12em;color:var(--muted2);
 }
 @media(max-width:768px){.footer-bottom{flex-direction:column;gap:12px;text-align:center;padding:18px 20px}}
 
 /* ═══════════════════════════════════════════════
    SCROLL REVEAL
 ═══════════════════════════════════════════════ */
-.reveal{
-  opacity:0;transform:translateY(28px);
-  transition:opacity .85s cubic-bezier(.4,0,.2,1),transform .85s cubic-bezier(.4,0,.2,1);
-}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .85s cubic-bezier(.4,0,.2,1),transform .85s cubic-bezier(.4,0,.2,1)}
 .reveal.visible{opacity:1;transform:translateY(0)}
-
-/* stagger children */
-.reveal-stagger > *{
-  opacity:0;transform:translateY(20px);
-  transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1);
-}
-.reveal-stagger.visible > *:nth-child(1){opacity:1;transform:translateY(0);transition-delay:.0s}
-.reveal-stagger.visible > *:nth-child(2){opacity:1;transform:translateY(0);transition-delay:.12s}
-.reveal-stagger.visible > *:nth-child(3){opacity:1;transform:translateY(0);transition-delay:.24s}
-.reveal-stagger.visible > *:nth-child(4){opacity:1;transform:translateY(0);transition-delay:.36s}
+.reveal-stagger>*{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1)}
+.reveal-stagger.visible>*:nth-child(1){opacity:1;transform:translateY(0);transition-delay:.0s}
+.reveal-stagger.visible>*:nth-child(2){opacity:1;transform:translateY(0);transition-delay:.12s}
+.reveal-stagger.visible>*:nth-child(3){opacity:1;transform:translateY(0);transition-delay:.24s}
+.reveal-stagger.visible>*:nth-child(4){opacity:1;transform:translateY(0);transition-delay:.36s}
 </style>
 </head>
 <body>
 
-<!-- ══ NAV ═════════════════════════════════════ -->
+<!-- ══ NAV ══════════════════════════════════════ -->
 <nav>
-  <div class="nav-logo">Alvarez Perfumeria</div>
+  <div class="nav-logo">
+    <img src="Al.png" alt="Alvarez Perfumeria logo" onerror="this.style.display='none'">
+    <span class="nav-logo-text">Alvarez Perfumeria</span>
+  </div>
   <ul class="nav-links">
     <li><a href="#collection">Colección</a></li>
-    <li><a href="#featured">La Maison</a></li>
-    <li><a href="#">Artesanía</a></li>
-    <li><a href="#">Contacto</a></li>
+    <li><a href="#alvarez">Alvarez</a></li>
+    <li><a href="#stats">Artesanía</a></li>
+    <li><a href="#contacto">Contacto</a></li>
   </ul>
   <div class="nav-right">
     <span>ES</span>
@@ -686,59 +583,48 @@ footer{
   </div>
 </nav>
 
-<!-- ══ HERO ════════════════════════════════════ -->
+<!-- ══ HERO ═════════════════════════════════════ -->
 <section id="hero">
   <div id="hero-bg"></div>
   <div id="spotlight"></div>
   <div id="grain"></div>
 
-  <!-- Animated silk SVG -->
+  <!-- Silk ribbon — gold on black -->
   <svg id="silk" viewBox="0 0 1440 260" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
     <defs>
       <linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%">
         <stop offset="0%"   stop-color="#0e0900" stop-opacity="0"/>
-        <stop offset="10%"  stop-color="#c9a96e" stop-opacity=".28"/>
-        <stop offset="30%"  stop-color="#e8d5a3" stop-opacity=".55"/>
-        <stop offset="50%"  stop-color="#c9a96e" stop-opacity=".4"/>
-        <stop offset="70%"  stop-color="#e8d5a3" stop-opacity=".5"/>
-        <stop offset="90%"  stop-color="#c9a96e" stop-opacity=".28"/>
+        <stop offset="10%"  stop-color="#c9a96e" stop-opacity=".3"/>
+        <stop offset="30%"  stop-color="#e8d5a3" stop-opacity=".58"/>
+        <stop offset="50%"  stop-color="#c9a96e" stop-opacity=".42"/>
+        <stop offset="70%"  stop-color="#e8d5a3" stop-opacity=".52"/>
+        <stop offset="90%"  stop-color="#c9a96e" stop-opacity=".3"/>
         <stop offset="100%" stop-color="#0e0900" stop-opacity="0"/>
       </linearGradient>
       <linearGradient id="sg2" x1="0%" y1="0%" x2="100%" y2="0%">
         <stop offset="0%"   stop-color="#0e0900" stop-opacity="0"/>
-        <stop offset="20%"  stop-color="#c9a96e" stop-opacity=".15"/>
-        <stop offset="50%"  stop-color="#f0e2b4" stop-opacity=".32"/>
-        <stop offset="80%"  stop-color="#c9a96e" stop-opacity=".15"/>
+        <stop offset="20%"  stop-color="#c9a96e" stop-opacity=".16"/>
+        <stop offset="50%"  stop-color="#f0e2b4" stop-opacity=".34"/>
+        <stop offset="80%"  stop-color="#c9a96e" stop-opacity=".16"/>
         <stop offset="100%" stop-color="#0e0900" stop-opacity="0"/>
       </linearGradient>
     </defs>
-    <!-- main ribbon -->
-    <path d="M-120,155 C80,55 200,245 440,135 C680,25 780,205 1020,115 C1260,25 1360,190 1580,105"
-          fill="none" stroke="url(#sg)" stroke-width="58"/>
-    <!-- secondary -->
-    <path d="M-120,192 C120,98 240,268 520,162 C800,56 900,232 1180,152 C1380,72 1480,210 1620,142"
-          fill="none" stroke="url(#sg2)" stroke-width="26" opacity=".6"/>
-    <!-- highlight -->
-    <path d="M-120,155 C80,55 200,245 440,135 C680,25 780,205 1020,115 C1260,25 1360,190 1580,105"
-          fill="none" stroke="rgba(255,242,185,.25)" stroke-width="4.5"/>
-    <!-- shimmer -->
-    <path d="M-120,155 C80,55 200,245 440,135 C680,25 780,205 1020,115 C1260,25 1360,190 1580,105"
-          fill="none" stroke="rgba(255,255,200,.55)" stroke-width="2" stroke-dasharray="65 270">
+    <path d="M-120,155 C80,55 200,245 440,135 C680,25 780,205 1020,115 C1260,25 1360,190 1580,105" fill="none" stroke="url(#sg)" stroke-width="58"/>
+    <path d="M-120,192 C120,98 240,268 520,162 C800,56 900,232 1180,152 C1380,72 1480,210 1620,142" fill="none" stroke="url(#sg2)" stroke-width="26" opacity=".6"/>
+    <path d="M-120,155 C80,55 200,245 440,135 C680,25 780,205 1020,115 C1260,25 1360,190 1580,105" fill="none" stroke="rgba(255,242,185,.22)" stroke-width="4"/>
+    <path d="M-120,155 C80,55 200,245 440,135 C680,25 780,205 1020,115 C1260,25 1360,190 1580,105" fill="none" stroke="rgba(255,255,200,.55)" stroke-width="2" stroke-dasharray="65 270">
       <animate attributeName="stroke-dashoffset" from="0" to="-335" dur="2.6s" repeatCount="indefinite"/>
     </path>
   </svg>
 
-  <!-- Giant brand name — z-index 4, behind bottles -->
   <div id="brand-text">ALVAREZ</div>
 
   <!-- Carousel -->
   <div id="carousel">
-
-    <!-- Slide 0 — IL MEXICO -->
     <div class="slide active" data-idx="0">
       <div class="pedestal-wrap">
         <div class="bottle-stage">
-          <img class="bottle-img" src="ILMEXICO.webp" alt="IL Mexico" draggable="false">
+          <img class="bottle-img" src="ILMEXICO.webp" alt="ILMIN Mexico" draggable="false">
         </div>
         <div class="pedestal">
           <div class="ped-tier t3"></div>
@@ -747,8 +633,6 @@ footer{
         </div>
       </div>
     </div>
-
-    <!-- Slide 1 — 9PM ELIXIR -->
     <div class="slide" data-idx="1">
       <div class="pedestal-wrap">
         <div class="bottle-stage">
@@ -761,8 +645,6 @@ footer{
         </div>
       </div>
     </div>
-
-    <!-- Slide 2 — HAWAS -->
     <div class="slide" data-idx="2">
       <div class="pedestal-wrap">
         <div class="bottle-stage">
@@ -775,14 +657,11 @@ footer{
         </div>
       </div>
     </div>
+  </div>
 
-  </div><!-- /carousel -->
-
-  <!-- Side blurred bottles -->
   <img class="side-bottle left"  src="9PM_ELIXIR-1.webp" alt="" aria-hidden="true">
   <img class="side-bottle right" src="HAWAS.webp"        alt="" aria-hidden="true">
 
-  <!-- Arrows -->
   <button class="arrow-btn" id="btn-prev" aria-label="Anterior">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
   </button>
@@ -790,27 +669,26 @@ footer{
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
   </button>
 
-  <!-- Product card -->
   <div id="product-card">
-    <div id="pname">IL Mexico</div>
+    <div id="pname">ILMIN Mexico</div>
     <div id="pnotes">Cítricos brillantes. Madera de sándalo.<br>Elegancia sin límites.</div>
     <div id="pmeta">
       <span id="pmeta-vol">100ml · Extrait de Parfum</span>
-      <span id="pmeta-price">$1,850</span>
+      <span id="pmeta-price">$680.000</span>
     </div>
   </div>
 
   <a href="#collection" id="explore-btn">Explorar Ahora</a>
-  <div id="bottom-tag">CDMX · Haute Parfumerie</div>
+  <div id="bottom-tag">Colombia · Haute Parfumerie</div>
 
   <div id="dots">
-    <button class="dot active" aria-label="Slide 1"></button>
-    <button class="dot" aria-label="Slide 2"></button>
-    <button class="dot" aria-label="Slide 3"></button>
+    <button class="dot active"></button>
+    <button class="dot"></button>
+    <button class="dot"></button>
   </div>
 </section>
 
-<!-- ══ MARQUEE 1 ════════════════════════════════ -->
+<!-- ══ MARQUEE 1 ═════════════════════════════════ -->
 <div class="marquee-strip">
   <div class="marquee-inner">
     <span class="mi"><span class="mdot"></span>Haute Parfumerie</span>
@@ -818,75 +696,65 @@ footer{
     <span class="mi"><span class="mdot"></span>Extrait de Parfum</span>
     <span class="mi"><span class="mdot"></span>Fragancias Exclusivas</span>
     <span class="mi"><span class="mdot"></span>Ingredientes Premium</span>
-    <span class="mi"><span class="mdot"></span>Edición Limitada</span>
+    <span class="mi"><span class="mdot"></span>Colombia</span>
     <span class="mi"><span class="mdot"></span>Haute Parfumerie</span>
     <span class="mi"><span class="mdot"></span>Alvarez Perfumeria</span>
     <span class="mi"><span class="mdot"></span>Extrait de Parfum</span>
     <span class="mi"><span class="mdot"></span>Fragancias Exclusivas</span>
     <span class="mi"><span class="mdot"></span>Ingredientes Premium</span>
-    <span class="mi"><span class="mdot"></span>Edición Limitada</span>
+    <span class="mi"><span class="mdot"></span>Colombia</span>
   </div>
 </div>
 
-<!-- ══ COLLECTION ══════════════════════════════ -->
+<!-- ══ COLLECTION ════════════════════════════════ -->
 <section id="collection">
   <div class="reveal">
     <div class="section-eyebrow">La Colección</div>
     <h2 class="section-heading">Fragancias que<br><em>cuentan historias</em></h2>
   </div>
   <div class="coll-grid reveal-stagger">
-
     <div class="coll-card">
-      <div class="coll-bg coll-bg-noir">
-        <img src="ILMEXICO.webp" alt="IL Mexico">
-      </div>
+      <div class="coll-bg coll-bg-noir"><img src="C1.jpg" alt="IL Mexico"></div>
       <button class="coll-btn">+ Agregar</button>
       <div class="coll-info">
         <div class="coll-num">N° 01</div>
-        <div class="coll-name">IL Mexico</div>
+        <div class="coll-name">ILMIN Mexico</div>
         <div class="coll-notes">Cítricos · Sándalo · Oud<br>Vainilla · Almizcle blanco</div>
-        <div class="coll-price">$1,850 · 100ml</div>
+        <div class="coll-price">$680.000 · 100ml</div>
       </div>
     </div>
-
     <div class="coll-card">
-      <div class="coll-bg coll-bg-blue">
-        <img src="9PM_ELIXIR-1.webp" alt="9PM Elixir">
-      </div>
+      <div class="coll-bg coll-bg-dark"><img src="C2.jpg" alt="9PM Night Out"></div>
       <button class="coll-btn">+ Agregar</button>
       <div class="coll-info">
         <div class="coll-num">N° 02</div>
-        <div class="coll-name">9PM Elixir</div>
-        <div class="coll-notes">Noche profunda · Especias<br>Cedro · Ámbar oscuro</div>
-        <div class="coll-price">$2,100 · 100ml</div>
+        <div class="coll-name">9PM Night Out</div>
+        <div class="coll-notes">Noche oscura · Especias negras<br>Madera ahumada · Ámbar</div>
+        <div class="coll-price">$345.000 · 100ml</div>
       </div>
     </div>
-
     <div class="coll-card">
-      <div class="coll-bg coll-bg-ambre">
-        <img src="HAWAS.webp" alt="Hawas">
-      </div>
+      <div class="coll-bg coll-bg-teal"><img src="C3.jpg" alt="Hawas Malibu"></div>
       <button class="coll-btn">+ Agregar</button>
       <div class="coll-info">
         <div class="coll-num">N° 03</div>
-        <div class="coll-name">Hawas</div>
-        <div class="coll-notes">Frescura marina · Pimienta<br>Vetiver · Musgo</div>
-        <div class="coll-price">$1,650 · 100ml</div>
+        <div class="coll-name">Hawas Malibu</div>
+        <div class="coll-notes">Océano tropical · Cítricos<br>Almizcle · Madera fresca</div>
+        <div class="coll-price">$385.000 · 100ml</div>
       </div>
     </div>
-
   </div>
 </section>
 
-<!-- ══ MARQUEE 2 ════════════════════════════════ -->
+<!-- ══ MARQUEE 2 ═════════════════════════════════ -->
 <div class="marquee-strip">
   <div class="marquee-inner rev">
-    <span class="mi"><span class="mdot"></span>Envío a Todo México</span>
+    <span class="mi"><span class="mdot"></span>Envío a Colombia</span>
     <span class="mi"><span class="mdot"></span>Auténtico 100%</span>
     <span class="mi"><span class="mdot"></span>Atención Personalizada</span>
     <span class="mi"><span class="mdot"></span>Empaque de Lujo</span>
     <span class="mi"><span class="mdot"></span>Fragancia Garantizada</span>
-    <span class="mi"><span class="mdot"></span>Envío a Todo México</span>
+    <span class="mi"><span class="mdot"></span>Envío a Colombia</span>
     <span class="mi"><span class="mdot"></span>Auténtico 100%</span>
     <span class="mi"><span class="mdot"></span>Atención Personalizada</span>
     <span class="mi"><span class="mdot"></span>Empaque de Lujo</span>
@@ -894,17 +762,27 @@ footer{
   </div>
 </div>
 
-<!-- ══ FEATURED / ABOUT ═════════════════════════ -->
-<section id="featured">
-  <div class="feat-visual reveal">
-    <canvas id="feat-canvas" width="700" height="600" style="width:100%;height:100%;display:block"></canvas>
-    <div class="feat-visual-overlay"></div>
+<!-- ══ ALVAREZ (ex La Maison) ═══════════════════ -->
+<section id="alvarez">
+  <!-- Visual with logo + luxury silhouette canvas -->
+  <div class="alv-visual reveal">
+    <div class="alv-canvas-bg">
+      <canvas id="alv-canvas" width="700" height="750"></canvas>
+    </div>
+    <div class="alv-visual-overlay"></div>
+    <div class="alv-logo-container">
+      <img class="alv-logo-img" src="Al.png" alt="Alvarez Perfumeria" onerror="this.parentElement.querySelector('.alv-logo-fallback').style.display='block';this.style.display='none'">
+      <div class="alv-logo-fallback" style="display:none;font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300;letter-spacing:.3em;color:var(--gold);text-align:center">ALVAREZ</div>
+      <span class="alv-logo-sub">Haute Parfumerie · Colombia</span>
+    </div>
   </div>
-  <div class="feat-text reveal">
-    <div class="section-eyebrow">Nuestra Filosofía</div>
-    <div class="feat-divider"></div>
-    <blockquote class="feat-quote">"El perfume es el arte que hace<br>visible lo invisible."</blockquote>
-    <p class="feat-body">En Alvarez Perfumeria creemos que cada fragancia es una experiencia sensorial única. Seleccionamos cuidadosamente cada perfume de las más prestigiosas casas del mundo — desde Orientica hasta Afnan — para llevarte lo mejor de la alta perfumería con autenticidad garantizada.</p>
+
+  <!-- Text panel -->
+  <div class="alv-text reveal">
+    <div class="section-eyebrow">Alvarez</div>
+    <div class="alv-divider"></div>
+    <blockquote class="alv-quote">"El perfume es el arte que hace visible lo invisible."</blockquote>
+    <p class="alv-body">En Alvarez Perfumeria creemos que cada fragancia es una experiencia sensorial única. Seleccionamos cuidadosamente cada perfume de las más prestigiosas casas del mundo — desde Orientica hasta Afnan — para llevarte lo mejor de la alta perfumería con autenticidad garantizada, directo a Colombia.</p>
     <a href="#collection" class="btn-ghost">
       Ver Colección Completa
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -912,188 +790,225 @@ footer{
   </div>
 </section>
 
-<!-- ══ STATS ════════════════════════════════════ -->
+<!-- ══ STATS ══════════════════════════════════════ -->
 <div id="stats" class="reveal-stagger">
-  <div class="stat">
-    <div class="stat-num">+150</div>
-    <div class="stat-label">Fragancias</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">100%</div>
-    <div class="stat-label">Originales</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">+5K</div>
-    <div class="stat-label">Clientes Felices</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">24h</div>
-    <div class="stat-label">Envío Express</div>
-  </div>
+  <div class="stat"><div class="stat-num">+150</div><div class="stat-label">Fragancias</div></div>
+  <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Originales</div></div>
+  <div class="stat"><div class="stat-num">+5K</div><div class="stat-label">Clientes Felices</div></div>
+  <div class="stat"><div class="stat-num">24h</div><div class="stat-label">Envío Express</div></div>
 </div>
 
-<!-- ══ FOOTER ═══════════════════════════════════ -->
+<!-- ══ CONTACTO ═══════════════════════════════════ -->
+<section id="contacto">
+  <div class="contact-header reveal">
+    <span class="section-eyebrow">Contáctanos</span>
+    <h2 class="section-heading">Estamos para <em>ti</em></h2>
+    <p>Escríbenos por WhatsApp o síguenos en TikTok. Atención personalizada, envíos a toda Colombia.</p>
+  </div>
+
+  <div class="contact-grid reveal-stagger">
+
+    <!-- WhatsApp -->
+    <a class="contact-card" href="https://wa.me/573018574183" target="_blank" rel="noopener">
+      <div class="contact-icon wpp">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#25d366">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="contact-label">WhatsApp</div>
+        <div class="contact-name">Escríbenos</div>
+        <div class="contact-detail">+57 301 857 4183<br>Atención personalizada · Pedidos · Consultas</div>
+      </div>
+      <div class="contact-action">
+        Chatear ahora
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
+
+    <!-- TikTok -->
+    <a class="contact-card" href="https://www.tiktok.com/@alvarez.perfumeri" target="_blank" rel="noopener">
+      <div class="contact-icon tiktok">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--text)">
+          <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="contact-label">TikTok</div>
+        <div class="contact-name">@alvarez.perfumeri</div>
+        <div class="contact-detail">Contenido exclusivo · Reseñas<br>Novedades y promociones</div>
+      </div>
+      <div class="contact-action">
+        Ver perfil
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ══ FOOTER ════════════════════════════════════ -->
 <footer>
   <div class="footer-top">
     <div>
-      <div class="footer-brand-name">Alvarez Perfumeria</div>
-      <p class="footer-tagline">Haute Parfumerie de las marcas más exclusivas del mundo, con autenticidad garantizada y envío a todo México.</p>
+      <div class="footer-logo">
+        <img src="Al.png" alt="Alvarez" onerror="this.style.display='none'">
+        <span class="footer-brand-name">Alvarez Perfumeria</span>
+      </div>
+      <p class="footer-tagline">Haute Parfumerie de las marcas más exclusivas del mundo, con autenticidad garantizada y envío a toda Colombia.</p>
     </div>
     <div>
       <div class="footer-col-title">Colección</div>
       <ul class="footer-links">
         <li><a href="#">IL Mexico</a></li>
-        <li><a href="#">9PM Elixir</a></li>
-        <li><a href="#">Hawas</a></li>
+        <li><a href="#">9PM Night Out</a></li>
+        <li><a href="#">Hawas Malibu</a></li>
         <li><a href="#">Ver todo</a></li>
       </ul>
     </div>
     <div>
-      <div class="footer-col-title">La Maison</div>
+      <div class="footer-col-title">Alvarez</div>
       <ul class="footer-links">
         <li><a href="#">Nuestra Historia</a></li>
-        <li><a href="#">Artesanía</a></li>
-        <li><a href="#">Sostenibilidad</a></li>
+        <li><a href="#">Autenticidad</a></li>
+        <li><a href="#">Envíos Colombia</a></li>
       </ul>
     </div>
     <div>
       <div class="footer-col-title">Contacto</div>
       <ul class="footer-links">
-        <li><a href="#">WhatsApp</a></li>
-        <li><a href="#">Instagram</a></li>
-        <li><a href="#">TikTok</a></li>
-        <li><a href="#">Email</a></li>
+        <li><a href="https://wa.me/573018574183" target="_blank">WhatsApp</a></li>
+        <li><a href="https://www.tiktok.com/@alvarez.perfumeri" target="_blank">TikTok</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 Alvarez Perfumeria · Todos los derechos reservados</span>
-    <span>CDMX · Haute Parfumerie</span>
+    <span>© 2026 Alvarez Perfumeria · Colombia</span>
+    <span>Haute Parfumerie · Autenticidad Garantizada</span>
   </div>
 </footer>
 
 <script>
-/* ═══════════════════════════════════════════════
-   PARALLAX — brand text subtle mouse movement
-═══════════════════════════════════════════════ */
+/* ─── PARALLAX ───────────────────────────────── */
 const brandTxt = document.getElementById('brand-text');
-let tgtX=0, tgtY=0, curX=0, curY=0;
-document.getElementById('hero').addEventListener('mousemove', e => {
-  const cx = window.innerWidth/2, cy = window.innerHeight/2;
-  tgtX = (e.clientX - cx) * 0.012;
-  tgtY = (e.clientY - cy) * 0.006;
+let tgtX=0,tgtY=0,curX=0,curY=0;
+document.getElementById('hero').addEventListener('mousemove',e=>{
+  const cx=window.innerWidth/2,cy=window.innerHeight/2;
+  tgtX=(e.clientX-cx)*.012;tgtY=(e.clientY-cy)*.006;
 });
-(function parallaxLoop(){
-  curX += (tgtX - curX) * .06;
-  curY += (tgtY - curY) * .06;
-  brandTxt.style.transform = `translate(calc(-50% + ${curX}px), calc(-50% + ${curY}px))`;
-  requestAnimationFrame(parallaxLoop);
-})();
+(function pl(){curX+=(tgtX-curX)*.06;curY+=(tgtY-curY)*.06;
+  brandTxt.style.transform=`translate(calc(-50% + ${curX}px),calc(-50% + ${curY}px))`;
+  requestAnimationFrame(pl);})();
 
-/* ═══════════════════════════════════════════════
-   CAROUSEL
-═══════════════════════════════════════════════ */
-const products = [
-  { name:'IL Mexico',    notes:'Cítricos brillantes. Madera de sándalo.<br>Elegancia sin límites.',   vol:'100ml · Extrait de Parfum', price:'$1,850' },
-  { name:'9PM Elixir',   notes:'Noche profunda. Especias orientales.<br>Ámbar magnético.',             vol:'100ml · Elixir de Parfum',  price:'$2,100' },
-  { name:'Hawas',        notes:'Frescura marina. Pimienta negra.<br>Vetiver y musgo del bosque.',      vol:'100ml · Eau de Parfum',     price:'$1,650' },
+/* ─── CAROUSEL ───────────────────────────────── */
+const products=[
+  {name:'ILMIN Mexico',   notes:'Cítricos brillantes. Madera de sándalo.<br>Elegancia sin límites.',  vol:'100ml · Extrait de Parfum',price:'$680.000'},
+  {name:'9PM Night Out',notes:'Noche oscura. Especias orientales.<br>Ámbar magnético.',            vol:'100ml · Extrait de Parfum',price:'$345.000'},
+  {name:'Hawas Malibu',notes:'Frescura marina. Cítricos tropicales.<br>Almizcle y madera fresca.',vol:'100ml · Eau de Parfum',   price:'$345.000'},
 ];
+const slides=document.querySelectorAll('.slide'),dots=document.querySelectorAll('.dot');
+const sideL=document.querySelector('.side-bottle.left'),sideR=document.querySelector('.side-bottle.right');
+const sideSrcs=['ILMEXICO.webp','9PM_ELIXIR-1.webp','HAWAS.webp'];
+let cur=0;
 
-const slides   = document.querySelectorAll('.slide');
-const dots     = document.querySelectorAll('.dot');
-const sideL    = document.querySelector('.side-bottle.left');
-const sideR    = document.querySelector('.side-bottle.right');
-const sideSrcs = ['ILMEXICO.webp','9PM_ELIXIR-1.webp','HAWAS.webp'];
-let cur = 0;
-
-function goTo(n, dir=1) {
-  slides[cur].classList.remove('active');
-  dots[cur].classList.remove('active');
-  cur = ((n % slides.length) + slides.length) % slides.length;
-  slides[cur].classList.add('active');
-  dots[cur].classList.add('active');
-
-  // Update side bottles
-  const prev = ((cur - 1) + sideSrcs.length) % sideSrcs.length;
-  const next = (cur + 1) % sideSrcs.length;
-  sideL.src = sideSrcs[prev];
-  sideR.src = sideSrcs[next];
-
-  // Update card with fade
-  const card = document.getElementById('product-card');
+function goTo(n){
+  slides[cur].classList.remove('active');dots[cur].classList.remove('active');
+  cur=((n%slides.length)+slides.length)%slides.length;
+  slides[cur].classList.add('active');dots[cur].classList.add('active');
+  const prev=((cur-1)+sideSrcs.length)%sideSrcs.length,next=(cur+1)%sideSrcs.length;
+  sideL.src=sideSrcs[prev];sideR.src=sideSrcs[next];
+  const card=document.getElementById('product-card');
   card.classList.add('switching');
-  setTimeout(() => {
-    const p = products[cur];
-    document.getElementById('pname').textContent          = p.name;
-    document.getElementById('pnotes').innerHTML           = p.notes;
-    document.getElementById('pmeta-vol').textContent      = p.vol;
-    document.getElementById('pmeta-price').textContent    = p.price;
+  setTimeout(()=>{
+    const p=products[cur];
+    document.getElementById('pname').textContent=p.name;
+    document.getElementById('pnotes').innerHTML=p.notes;
+    document.getElementById('pmeta-vol').textContent=p.vol;
+    document.getElementById('pmeta-price').textContent=p.price;
     card.classList.remove('switching');
-  }, 280);
+  },280);
 }
+let auto=setInterval(()=>goTo(cur+1),5500);
+function rst(){clearInterval(auto);auto=setInterval(()=>goTo(cur+1),5500)}
+document.getElementById('btn-prev').addEventListener('click',()=>{goTo(cur-1);rst()});
+document.getElementById('btn-next').addEventListener('click',()=>{goTo(cur+1);rst()});
+dots.forEach((d,i)=>d.addEventListener('click',()=>{goTo(i);rst()}));
+let ts=0;
+document.getElementById('hero').addEventListener('touchstart',e=>ts=e.touches[0].clientX,{passive:true});
+document.getElementById('hero').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-ts;if(Math.abs(dx)>45){goTo(cur+(dx<0?1:-1));rst()}},{passive:true});
 
-let autoTimer = setInterval(() => goTo(cur + 1), 5500);
-function resetAuto() { clearInterval(autoTimer); autoTimer = setInterval(() => goTo(cur+1), 5500); }
+/* ─── ALVAREZ CANVAS — luxury silhouette with black + gold curve ─ */
+(function drawAlv(){
+  const cv=document.getElementById('alv-canvas');
+  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
 
-document.getElementById('btn-prev').addEventListener('click', () => { goTo(cur-1); resetAuto(); });
-document.getElementById('btn-next').addEventListener('click', () => { goTo(cur+1); resetAuto(); });
-dots.forEach((d,i) => d.addEventListener('click', () => { goTo(i); resetAuto(); }));
+  // Pure black background
+  c.fillStyle='#080808';c.fillRect(0,0,W,H);
 
-// Touch swipe
-let tsX = 0;
-const hero = document.getElementById('hero');
-hero.addEventListener('touchstart', e => tsX = e.touches[0].clientX, {passive:true});
-hero.addEventListener('touchend',   e => {
-  const dx = e.changedTouches[0].clientX - tsX;
-  if (Math.abs(dx) > 45) { goTo(cur + (dx < 0 ? 1 : -1)); resetAuto(); }
-}, {passive:true});
+  // Subtle vignette from center
+  const vig=c.createRadialGradient(W*.5,H*.5,0,W*.5,H*.5,W*.7);
+  vig.addColorStop(0,'rgba(20,14,6,.0)');vig.addColorStop(.7,'rgba(8,8,8,.3)');vig.addColorStop(1,'rgba(8,8,8,.8)');
+  c.fillStyle=vig;c.fillRect(0,0,W,H);
 
-/* ═══════════════════════════════════════════════
-   FEATURED CANVAS — atmospheric perfume visual
-═══════════════════════════════════════════════ */
-(function drawFeatured(){
-  const cv = document.getElementById('feat-canvas');
-  const c  = cv.getContext('2d');
-  const w  = cv.width, h = cv.height;
+  // LUXURY CURVED LIGHT SILHOUETTE — the signature element
+  // Main sweeping silk curve, gold on black
+  const silkGrad=c.createLinearGradient(0,H*.3,W,H*.7);
+  silkGrad.addColorStop(0,'rgba(10,8,4,0)');
+  silkGrad.addColorStop(.18,'rgba(201,169,110,.22)');
+  silkGrad.addColorStop(.38,'rgba(232,213,163,.55)');
+  silkGrad.addColorStop(.5,'rgba(245,230,184,.65)');
+  silkGrad.addColorStop(.62,'rgba(232,213,163,.52)');
+  silkGrad.addColorStop(.82,'rgba(201,169,110,.22)');
+  silkGrad.addColorStop(1,'rgba(10,8,4,0)');
 
-  // Background
-  const bg = c.createLinearGradient(0,0,w,h);
-  bg.addColorStop(0,'#0f1c3a'); bg.addColorStop(.45,'#120a04'); bg.addColorStop(1,'#060402');
-  c.fillStyle = bg; c.fillRect(0,0,w,h);
+  // Primary ribbon
+  c.save();
+  c.strokeStyle=silkGrad;c.lineWidth=52;c.lineCap='round';
+  c.shadowColor='rgba(201,169,110,.4)';c.shadowBlur=30;
+  c.beginPath();
+  c.moveTo(-60,H*.55);
+  c.bezierCurveTo(W*.15,H*.1, W*.4,H*.85, W*.62,H*.38);
+  c.bezierCurveTo(W*.78,H*.05, W*.88,H*.65, W+60,H*.42);
+  c.stroke();
 
-  // Atmosphere glow
-  const glow = c.createRadialGradient(w*.35,h*.3,0, w*.35,h*.3, w*.55);
-  glow.addColorStop(0,'rgba(201,169,110,.14)'); glow.addColorStop(1,'rgba(0,0,0,0)');
-  c.fillStyle = glow; c.fillRect(0,0,w,h);
+  // Secondary thinner ribbon (offset)
+  const silk2=c.createLinearGradient(0,H*.2,W,H*.8);
+  silk2.addColorStop(0,'rgba(10,8,4,0)');silk2.addColorStop(.3,'rgba(201,169,110,.18)');
+  silk2.addColorStop(.5,'rgba(245,230,184,.35)');silk2.addColorStop(.7,'rgba(201,169,110,.18)');silk2.addColorStop(1,'rgba(10,8,4,0)');
+  c.strokeStyle=silk2;c.lineWidth=22;c.shadowBlur=15;
+  c.beginPath();
+  c.moveTo(-60,H*.65);
+  c.bezierCurveTo(W*.2,H*.18, W*.45,H*.92, W*.68,H*.44);
+  c.bezierCurveTo(W*.82,H*.12, W*.9,H*.72, W+60,H*.5);
+  c.stroke();
 
-  // Abstract decorative lines
-  c.strokeStyle='rgba(201,169,110,.08)'; c.lineWidth=1;
-  for(let i=0;i<6;i++){
-    c.beginPath();
-    c.moveTo(w*.1+i*w*.12, 0);
-    c.lineTo(w*.05+i*w*.12, h);
-    c.stroke();
+  // Shimmer highlight line on top of ribbon
+  c.strokeStyle='rgba(255,248,210,.45)';c.lineWidth=3;c.shadowBlur=8;
+  c.shadowColor='rgba(255,248,210,.6)';
+  c.beginPath();
+  c.moveTo(-60,H*.55);
+  c.bezierCurveTo(W*.15,H*.1, W*.4,H*.85, W*.62,H*.38);
+  c.bezierCurveTo(W*.78,H*.05, W*.88,H*.65, W+60,H*.42);
+  c.stroke();
+  c.restore();
+
+  // Gold radial glow behind logo area
+  const orb=c.createRadialGradient(W*.5,H*.5,0,W*.5,H*.5,W*.3);
+  orb.addColorStop(0,'rgba(201,169,110,.1)');orb.addColorStop(.5,'rgba(201,169,110,.04)');orb.addColorStop(1,'rgba(0,0,0,0)');
+  c.fillStyle=orb;c.fillRect(0,0,W,H);
+
+  // Subtle vertical lines for texture
+  c.strokeStyle='rgba(201,169,110,.04)';c.lineWidth=1;c.shadowBlur=0;
+  for(let i=0;i<8;i++){
+    c.beginPath();c.moveTo(W*.08+i*W*.12,0);c.lineTo(W*.04+i*W*.12,H);c.stroke();
   }
-
-  // Gold orb
-  const orb=c.createRadialGradient(w*.35,h*.35,0,w*.35,h*.35,w*.22);
-  orb.addColorStop(0,'rgba(201,169,110,.18)'); orb.addColorStop(.6,'rgba(201,169,110,.04)'); orb.addColorStop(1,'rgba(0,0,0,0)');
-  c.fillStyle=orb; c.fillRect(0,0,w,h);
 })();
 
-/* ═══════════════════════════════════════════════
-   SCROLL REVEAL
-═══════════════════════════════════════════════ */
-const io = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if(e.isIntersecting){
-      e.target.classList.add('visible');
-      io.unobserve(e.target);
-    }
-  });
-}, {threshold: .1});
-
-document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => io.observe(el));
+/* ─── SCROLL REVEAL ──────────────────────────── */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}});
+},{threshold:.1});
+document.querySelectorAll('.reveal,.reveal-stagger').forEach(el=>io.observe(el));
 </script>
 </body>
 </html>
